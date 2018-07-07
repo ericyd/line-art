@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>canvas test</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- SVG definitions -->
+<svg class="sr-only">
+  <defs>
+    <path id="svg-close-button" d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"
+    />
+    <path id="svg-hamburger-button" d="M24 6h-24v-4h24v4zm0 4h-24v4h24v-4zm0 8h-24v4h24v-4z" />
+    <path fill-rule="evenodd" clip-rule="evenodd" fill="currentColor" id="svg-animation-direction-toggle" d="M12 0c6.623 0 12 5.377 12 12s-5.377 12-12 12-12-5.377-12-12 5.377-12 12-12zm0 2c5.519 0 10 4.481 10 10s-4.481 10-10 10-10-4.481-10-10 4.481-10 10-10zm2 12v-3l5 4-5 4v-3h-9v-2h9zm-4-6v-3l-5 4 5 4v-3h9v-2h-9z"
+    />
+    <path id="triangle" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="10" d="M0 10 L40 50 L0 90 L0 10"></path>
+  </defs>
+</svg>
+
+<section id="sidebar" class="sidebar collapsed">
+  <div class="sidebar__header">
+    Click an image to edit
+    <button id="close-sidebar" class="btn--secondary btn--menu">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+        <use href="#svg-close-button" />
+      </svg>
+    </button>
+    <button id="refresh" class="btn">Get new samples</button>
+  </div>
+  <div class="sidebar__thumbnails">
+    <canvas class="sidebar__thumb" id="myCanvas0" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas1" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas2" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas3" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas4" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas5" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas6" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas7" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas8" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas9" width="225" height="225"></canvas>
+    <canvas class="sidebar__thumb" id="myCanvas10" width="225" height="225"></canvas>
+  </div>
+</section>
+
+<section class="main push-body">
+  <div id="mainCanvasControls" class="main__controls hide">
+
+    <fieldset class="control-group">
+      <button id="open-sidebar" class="btn--secondary btn--menu">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+          <use href="#svg-hamburger-button" />
+        </svg>
+        Generated images
+      </button>
+    </fieldset>
+
+    <fieldset class="control-group is-expanded">
+      <legend class="control-group__legend toggler">
+        <div class="toggle-indicator">
+          <svg width="1em" height="1em" viewBox="0 0 100 100">
+            <use href="#triangle" />
+          </svg>
+        </div>
+        Style
+      </legend>
+      <!-- line color, bgColor, solid -->
+      <div class="toggle-target">
+        <div class="row">
+          <label class="control__label control__label--block">
+            line color
+            <span id="lineColor-value" class="control__value hide"></span>
+          </label>
+          <fieldset class="main__radios">
+            <input type="radio" name="lineColor" id="colorize" class="control__input--radio" />
+            <label class="control__label--radio" for="colorize">colorful</label>
+
+            <input type="radio" name="lineColor" id="white" class="control__input--radio" />
+            <label class="control__label--radio" for="white">white</label>
+
+            <input type="radio" name="lineColor" id="black" class="control__input--radio" />
+            <label class="control__label--radio" for="black">black</label>
+          </fieldset>
+        </div>
+
+        <div class="row">
+          <label for="bgColor" class="control__label control__label--block">background color:
+            <span id="bgColor-value" class="control__value"></span>
+          </label>
+          <input type="color" id="bgColor" class="control__input">
+        </div>
+
+        <div class="row">
+          <label for="solid" class="control__label row__item">
+            solid
+            <span id="solid-value" class="control__value hide"></span>
+          </label>
+          <div class="row__item">
+            <input type="checkbox" id="solid">
+          </div>
+        </div>
+      </div>
+
+    </fieldset>
+
+
+
+    <fieldset class="control-group is-expanded">
+      <legend class="control-group__legend toggler">
+        <div class="toggle-indicator">
+          <svg width="1em" height="1em" viewBox="0 0 100 100">
+            <use href="#triangle" />
+          </svg>
+        </div>
+        Line Width
+      </legend>
+      <div class="toggle-target">
+        <label for="width" class="control__label">
+          line width:
+          <span id="width-value" class="control__value"></span>
+        </label>
+        <input type="range" id="width" class="control__input--range">
+        <!-- animation -->
+        <div id="width-animate" class="animation-group">
+          <div class="row">
+            <label for="width-animation-run-toggle" class="control__label row__item">
+              animate
+            </label>
+            <div class="row__item">
+              <input type="checkbox" id="width-animation-run-toggle" class="control__input animation-run-toggle">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row__item">
+              flip direction
+            </div>
+            <div class="row__item">
+              <button type="button" class="animation-direction-toggle" title="flip direction">
+                <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <use href="#svg-animation-direction-toggle" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="width-animation-speed" class="control__label row__item">speed</label>
+            <input type="range" id="width-animation-speed" class="control__input--70 animation-step row__item">
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="control-group is-expanded">
+      <legend class="control-group__legend toggler">
+        <div class="toggle-indicator">
+          <svg width="1em" height="1em" viewBox="0 0 100 100">
+            <use href="#triangle" />
+          </svg>
+        </div>
+        Resolution
+      </legend>
+      <div class="toggle-target">
+        <label for="resolution" class="control__label">
+          resolution:
+          <span id="resolution-value" class="control__value"></span>
+        </label>
+        <input type="range" id="resolution" class="control__input--range">
+        <!-- animation -->
+        <div id="resolution-animate" class="animation-group">
+          <div class="row">
+            <label for="resolution-animation-run-toggle" class="control__label row__item">
+              animate
+            </label>
+            <div class="row__item">
+              <input type="checkbox" id="resolution-animation-run-toggle" class="control__input animation-run-toggle">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row__item">
+              flip direction
+            </div>
+            <div class="row__item">
+              <button type="button" class="animation-direction-toggle" title="flip direction">
+                <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <use href="#svg-animation-direction-toggle" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="resolution-animation-speed" class="control__label row__item">speed</label>
+            <input type="range" id="resolution-animation-speed" class="control__input--70 animation-step row__item">
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+
+    <fieldset class="control-group is-expanded">
+      <legend class="control-group__legend toggler">
+        <div class="toggle-indicator">
+          <svg width="1em" height="1em" viewBox="0 0 100 100">
+            <use href="#triangle" />
+          </svg>
+        </div>
+        Length
+      </legend>
+      <div class="toggle-target">
+        <label for="len" class="control__label">
+          length:
+          <span id="len-value" class="control__value"></span>
+        </label>
+        <input type="range" id="len" class="control__input--range">
+        <!-- animation -->
+        <div id="len-animate" class="animation-group">
+          <div class="row">
+            <label for="len-animation-run-toggle" class="control__label row__item">
+              animate
+            </label>
+            <div class="row__item">
+              <input type="checkbox" id="len-animation-run-toggle" class="control__input animation-run-toggle">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row__item">
+              flip direction
+            </div>
+            <div class="row__item">
+              <button type="button" class="animation-direction-toggle" title="flip direction">
+                <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <use href="#svg-animation-direction-toggle" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="len-animation-speed" class="control__label row__item">speed</label>
+            <input type="range" id="len-animation-speed" class="control__input--70 animation-step row__item">
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+
+    <fieldset class="control-group is-expanded">
+      <legend class="control-group__legend toggler">
+        <div class="toggle-indicator">
+          <svg width="1em" height="1em" viewBox="0 0 100 100">
+            <use href="#triangle" />
+          </svg>
+        </div>
+        X modulator
+      </legend>
+      <div class="toggle-target">
+        <label for="xModDepth" class="control__label">
+          depth:
+          <span id="xModDepth-value" class="control__value"></span>
+        </label>
+        <input type="range" id="xModDepth" class="control__input--range">
+        <!-- animation -->
+        <div id="xModDepth-animate" class="animation-group">
+          <div class="row">
+            <label for="xModDepth-animation-run-toggle" class="control__label row__item">
+              animate
+            </label>
+            <div class="row__item">
+              <input type="checkbox" id="xModDepth-animation-run-toggle" class="control__input animation-run-toggle">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row__item">
+              flip direction
+            </div>
+            <div class="row__item">
+              <button type="button" class="animation-direction-toggle" title="flip direction">
+                <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <use href="#svg-animation-direction-toggle" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="xModDepth-animation-speed" class="control__label row__item">speed</label>
+            <input type="range" id="xModDepth-animation-speed" class="control__input--70 animation-step row__item">
+          </div>
+        </div>
+
+        <div class="row row--margin-top">
+          <label class="control__label control__label--block">
+            modulator func X:
+            <span id="oscillatorX-value" class="control__value"></span>
+          </label>
+          <!-- value attributes and data-display attributes are
+            set programmatically in the init() function -->
+          <fieldset class="main__radios">
+            <input type="radio" name="oscillatorX" id="osc0" class="control__input--radio" />
+            <label class="control__label--radio" for="osc0">1</label>
+
+            <input type="radio" name="oscillatorX" id="osc1" class="control__input--radio" />
+            <label class="control__label--radio" for="osc1">2</label>
+
+            <input type="radio" name="oscillatorX" id="osc2" class="control__input--radio" />
+            <label class="control__label--radio" for="osc2">3</label>
+
+            <br />
+
+            <input type="radio" name="oscillatorX" id="osc3" class="control__input--radio" />
+            <label class="control__label--radio" for="osc3">4</label>
+
+            <input type="radio" name="oscillatorX" id="osc4" class="control__input--radio" />
+            <label class="control__label--radio" for="osc4">5</label>
+
+            <input type="radio" name="oscillatorX" id="osc5" class="control__input--radio" />
+            <label class="control__label--radio" for="osc5">6</label>
+
+            <br />
+
+            <input type="radio" name="oscillatorX" id="osc6" class="control__input--radio" />
+            <label class="control__label--radio" for="osc6">7</label>
+
+            <input type="radio" name="oscillatorX" id="osc7" class="control__input--radio" />
+            <label class="control__label--radio" for="osc7">8</label>
+
+            <input type="radio" name="oscillatorX" id="osc8" class="control__input--radio" />
+            <label class="control__label--radio" for="osc8">9</label>
+
+          </fieldset>
+        </div>
+      </div>
+    </fieldset>
+
+
+    <fieldset class="control-group is-expanded">
+      <legend class="control-group__legend toggler">
+        <div class="toggle-indicator">
+          <svg width="1em" height="1em" viewBox="0 0 100 100">
+            <use href="#triangle" />
+          </svg>
+        </div>
+        Y Modulator
+      </legend>
+      <div class="toggle-target">
+        <label for="yModDepth" class="control__label">
+          depth:
+          <span id="yModDepth-value" class="control__value"></span>
+        </label>
+        <input type="range" id="yModDepth" class="control__input--range">
+        <!-- animation -->
+        <div id="yModDepth-animate" class="animation-group">
+          <div class="row">
+            <label for="yModDepth-animation-run-toggle" class="control__label row__item">
+              animate
+            </label>
+            <div class="row__item">
+              <input type="checkbox" id="yModDepth-animation-run-toggle" class="control__input animation-run-toggle">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="row__item">
+              flip direction
+            </div>
+            <div class="row__item">
+              <button type="button" class="animation-direction-toggle" title="flip direction">
+                <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <use href="#svg-animation-direction-toggle" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="yModDepth-animation-speed" class="control__label row__item">speed</label>
+            <input type="range" id="yModDepth-animation-speed" class="control__input--70 animation-step row__item">
+          </div>
+        </div>
+        <div class="row row--margin-top">
+          <label class="control__label control__label--block">
+            modulator func Y:
+            <span id="oscillatorY-value" class="control__value"></span>
+          </label>
+          <!-- value attributes and data-display attributes are
+            set programmatically in the init() function -->
+          <fieldset class="main__radios">
+            <input type="radio" name="oscillatorY" id="osc10" class="control__input--radio" />
+            <label class="control__label--radio" for="osc10">1</label>
+
+            <input type="radio" name="oscillatorY" id="osc11" class="control__input--radio" />
+            <label class="control__label--radio" for="osc11">2</label>
+
+            <input type="radio" name="oscillatorY" id="osc12" class="control__input--radio" />
+            <label class="control__label--radio" for="osc12">3</label>
+
+            <br />
+
+            <input type="radio" name="oscillatorY" id="osc13" class="control__input--radio" />
+            <label class="control__label--radio" for="osc13">4</label>
+
+            <input type="radio" name="oscillatorY" id="osc14" class="control__input--radio" />
+            <label class="control__label--radio" for="osc14">5</label>
+
+            <input type="radio" name="oscillatorY" id="osc15" class="control__input--radio" />
+            <label class="control__label--radio" for="osc15">6</label>
+
+            <br />
+
+            <input type="radio" name="oscillatorY" id="osc16" class="control__input--radio" />
+            <label class="control__label--radio" for="osc16">7</label>
+
+            <input type="radio" name="oscillatorY" id="osc17" class="control__input--radio" />
+            <label class="control__label--radio" for="osc17">8</label>
+
+            <input type="radio" name="oscillatorY" id="osc18" class="control__input--radio" />
+            <label class="control__label--radio" for="osc18">9</label>
+
+          </fieldset>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="control-group">
+      <a href="#" id="downloader" class="btn" download="image.png">Save image</a>
+      <div>
+        A few notes:
+        <ul>
+          <li>To fine-tune a slider, click it and then use the arrow keys</li>
+          <li>If things are running slowly, try turning down the resolution</li>
+          <li>Experiment! There are lots of interesting images you can create</li>
+        </ul>
+      </div>
+    </fieldset>
+  </div>
+  <canvas id="mainCanvas" width="800" height="800"></canvas>
+</section>
+
+  <script src="js.js"></script>
+</body>
+<!-- 
+  Credits:
+  https://iconmonstr.com/connection-8-svg/
+  https://iconmonstr.com/menu-1-svg/
+  https://iconmonstr.com/x-mark-1-svg/
+ -->
+
+</html>
