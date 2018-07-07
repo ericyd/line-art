@@ -40,11 +40,12 @@ function toHex(value) {
  * These phases can be approximated with a clipped sin function offset to different sections of its period
  *
  * @param {number} n must satisfy: nMin <= n <= nMax
- * @returns {string} `rgb(num,num,num)`
+ * @returns {any} rgb(num,num,num) | #HHHHHH | [num, num, num]
  */
 function valToRGBFactory(nMax = 100, nMin = 0, {
   fixEdges = false, // show black @ nMin and white @ nMax
-  useHex = false // return 6-digit hex value in form #000000
+  returnHex = false, // return 6-digit hex value in form #000000
+  returnChannels = false // returns an array of the raw r, g, b values
 } = {}) {
   return function (n) {
     if (n < nMin || n > nMax) {
@@ -75,12 +76,33 @@ function valToRGBFactory(nMax = 100, nMin = 0, {
     var g = channel(n6th * 6 - n12th);
     var b = channel(n6th * 4 - n12th);
 
-    if (useHex) {
-      return `#${toHex(r(n))}${toHex(g(n))}${toHex(b(n))}`
+    if (returnHex) {
+      return `#${toHex(r(n))}${toHex(g(n))}${toHex(b(n))}`;
+    }
+    if (returnChannels) {
+      return [r(n), g(n), b(n)];
     }
 
     return `rgb(${r(n)},${g(n)},${b(n)})`;
   };
+}
+
+/**
+ * 
+ * @param {string} color must be a hex value
+ */
+function fixedColorFactory(color) {
+  return (_, __, {returnChannels = false} = {}) => {
+    return () => {
+      if (returnChannels) {
+        if (color.slice(1, 2) === "F") {
+          return [255, 255, 255];
+        }
+        return [0, 0, 0];
+      }
+      return color;
+    }
+  }
 }
 
 function download(e) {
@@ -188,7 +210,6 @@ var oscillatorsX = [{
     value: t => {
       var a = 0.5;
       var b = 0.5;
-      // var lambda = a / b;
       return a - b * Math.sin(t);
     },
     display: "trochoid"
@@ -199,7 +220,7 @@ var oscillatorsX = [{
     value: t => {
       var r = 0.2;
       var k = 3; // number of cusps
-      var R = k * r;
+      // var R = k * r;
       // supposedly either of these two functions should work
       // return ( (r + R)*Math.cos(t) - r*Math.cos((r + R) / r * t) )
       return r * (k + 1) * Math.cos(t) - r * Math.cos((k + 1) * t);
@@ -255,7 +276,6 @@ var oscillatorsY = [{
     value: t => {
       var a = 0.5;
       var b = 0.5;
-      // var lambda = a / b;
       return a - b * Math.cos(t);
     },
     display: "trochoid"
@@ -266,9 +286,6 @@ var oscillatorsY = [{
     value: t => {
       var r = 0.2;
       var k = 3; // number of cusps
-      var R = k * r;
-      // supposedly either of these two functions should work
-      // return ( (r + R)*Math.cos(t) - r*Math.cos((r + R) / r * t) )
       return r * (k + 1) * Math.sin(t) - r * Math.sin((k + 1) * t);
     },
     display: "epicycloid"
@@ -304,12 +321,12 @@ var lineColors = [{
 
   {
     id: "white",
-    value: max => t => "#FFFFFF",
+    value: fixedColorFactory("#FFFFFF"),
     display: "white"
   },
   {
     id: "black",
-    value: max => t => "#000000",
+    value: fixedColorFactory("#000000"),
     display: "black"
   }
 ];
@@ -344,7 +361,7 @@ class Parameter {
 
   addEventListeners() {
     this.controls.forEach(control => {
-      control.addEventListener("input", throttle(this.onInput.bind(this), 100));
+      control.addEventListener("input", throttle(this.onInput.bind(this), 125));
     });
     return this;
   }
@@ -456,7 +473,7 @@ class SliderParameter extends Parameter {
 
   generate() {
     if (this.generateIntegers) {
-      // have to call this.transformerposition here because this is
+      // have to call this.transformer.position here because this is
       // what we want the final result to be;
       // internally, this.value is stored as the transformed value
       var generated = this.transformer.position(
@@ -487,7 +504,6 @@ class SliderParameter extends Parameter {
   }
 
   async updateAnimationStep(e) {
-    console.log('updating animation step', e.target.value);
     this.animation.step = Number(e.target.value);
   }
 
@@ -630,7 +646,7 @@ class ColorParameter extends Parameter {
     this.rawValue = this.value = this.chance() ?
       "#000000" :
       valToRGBFactory(100, 0, {
-        useHex: true
+        returnHex: true
       })(Math.random() * 100);
     return this;
   }
@@ -647,20 +663,45 @@ class Drawing {
     this.radius = Math.max(this.canvas.width, this.canvas.height) / 2.1;
     this.offsetPoint = val => val + this.canvas.width / 2;
 
-    // TODO: use canvasData to draw pixels
-    // this.useImageData = false;
-    // canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    // canvasData = ctx.createImageData(canvas.width, canvas.height);
+    // TODO: figure out best way to apply lineWidth to pixels drawnn on imageData
+    this.useImageData = false;
+    this.imageData = this.ctx.createImageData(this.canvas.width, this.canvas.height);
+    // this.canvas.addEventListener('mousemove', this.logDataOnHover.bind(this));
 
     return this;
   }
 
+  // currently not used, but could be useful for debugging
+  logDataOnHover(event) {
+    var x = event.layerX;
+    var y = event.layerY;
+    var pixel = this.ctx.getImageData(x, y, 1, 1);
+    var data = pixel.data;
+    var rgba1 = 'rgba(' + data[0] + ', ' + data[1] +
+               ', ' + data[2] + ', ' + data[3] + ')';
+    console.log(rgba1);
+  }
+  
   drawPixel(x, y, r, g, b, a) {
-    var index = Math.round(x + y * this.canvas.height) * 4;
-    this.canvasData.data[index + 0] = r;
-    this.canvasData.data[index + 1] = g;
-    this.canvasData.data[index + 2] = b;
-    this.canvasData.data[index + 3] = a;
+    // if x and y are not rounded this returns very inaccurate results (why?)
+    var index = (Math.round(y) * this.canvas.width + Math.round(x)) * 4;
+    this.imageData.data[index + 0] = r;
+    this.imageData.data[index + 1] = g;
+    this.imageData.data[index + 2] = b;
+    this.imageData.data[index + 3] = a;
+  }
+
+  drawDotsImageData() {
+    // get imageData here to capture background color;
+    this.imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+    for (let t = 0; t <= this.max; t += this.increment) {
+      var x = this.xScale(t);
+      var y = this.yScale(t);
+      var [r, g, b] = this.getPixelColor(t);
+      this.drawPixel(x, y, r, g, b, 255);
+    }
+    this.ctx.putImageData(this.imageData, 0, 0);
+    return this;
   }
 
   drawDots() {
@@ -669,16 +710,7 @@ class Drawing {
       var y = this.yScale(t) /*  * osc(i / yModDepth) */ ;
       this.ctx.fillStyle = this.getLineColor(t);
       this.ctx.fillRect(x, y, this.lineWidth, this.lineWidth);
-
-      // TODO: use image data to draw rectangles
-      // https://stackoverflow.com/a/8290734
-      // if (this.useImageData) {
-      //     this.drawPixel(x, y, 0, 0, 0, 255);
-      // }
     }
-    // if (this.useImageData) {
-    //     this.ctx.putImageData(this.canvasData, 0, 0);
-    // }
     return this;
   }
 
@@ -712,6 +744,8 @@ class Drawing {
       this.x = this.xScale(0);
       this.y = this.yScale(0);
       return this.drawLines();
+    } else if (this.useImageData) {
+      return this.drawDotsImageData();
     } else {
       return this.drawDots();
     }
@@ -739,7 +773,10 @@ class Drawing {
         this.params.oscillatorX.value(t * this.params.yModDepth.value)
       );
     this.max = Math.PI * this.params.len.value;
-    this.getLineColor = this.params.lineColor.value(this.max);
+    this.getLineColor = this.params.lineColor.value(this.max, 0);
+    // pixelColor is used when drawing with imageData because individual channels are required
+    // could consider refactoring the factory to return channels by default and then transform as needed
+    this.getPixelColor = this.params.lineColor.value(this.max, 0, { returnChannels: true });
     this.lineWidth = this.params.width.value;
     this.increment = 1 / this.params.resolution.value;
     return this;
