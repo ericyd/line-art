@@ -109,6 +109,48 @@ function toggleNextBlock(e) {
   listener.parentElement.classList.toggle('is-expanded');
 }
 
+// credit: https://github.com/jashkenas/underscore/blob/ae037f7c41323807ae6f1533c45512e6d31a1574/underscore.js#L842-L881
+function throttle(func, wait, options = {}) {
+  var timeout, context, args, result;
+  var previous = 0;
+
+  var later = function() {
+    previous = options.leading === false ? 0 : Date.now();
+    timeout = null;
+    result = func.apply(context, args);
+    if (!timeout) context = args = null;
+  };
+
+  var throttled = function() {
+    var now = Date.now();
+    if (!previous && options.leading === false) previous = now;
+    var remaining = wait - (now - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = now;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
+
+  throttled.cancel = function() {
+    clearTimeout(timeout);
+    previous = 0;
+    timeout = context = args = null;
+  };
+
+  return throttled;
+}
+
+
 // COLLECTIONS FOR OPTIONPARAMETERS
 // ================
 
@@ -302,7 +344,7 @@ class Parameter {
 
   addEventListeners() {
     this.controls.forEach(control => {
-      control.addEventListener("input", this.onInput.bind(this));
+      control.addEventListener("input", throttle(this.onInput.bind(this), 100));
     });
     return this;
   }
@@ -351,7 +393,8 @@ class SliderParameter extends Parameter {
       },
       generateIntegers = false,
       generate1 = false,
-      animationController = false
+      animationController = false,
+      animationStep
     } = {}
   ) {
     super(param, [param], 'number');
@@ -363,7 +406,6 @@ class SliderParameter extends Parameter {
     this.generateIntegers = generateIntegers;
     this.generate1 = generate1;
     if (animationController) {
-      const range = (this.max - this.min);
       const animationContainer = document.getElementById(animationController);
       this.animation = {
         isActive: false,
@@ -371,7 +413,7 @@ class SliderParameter extends Parameter {
         now: Date.now(),
         lastRun: Date.now(),
         fps: 1000 / 30,
-        step: range / 50000,
+        step: animationStep || (this.max - this.min) / 50000,
         controller: {
           run: animationContainer.querySelector('.animation-run-toggle'),
           direction: animationContainer.querySelector('.animation-direction-toggle'),
@@ -381,10 +423,10 @@ class SliderParameter extends Parameter {
       this.animate = this.animate.bind(this);
       this.animation.controller.run.addEventListener('input', this.toggleAnimation.bind(this));
       this.animation.controller.direction.addEventListener('click', this.toggleAnimationDirection.bind(this));
-      this.animation.controller.step.addEventListener('input', this.updateAnimationStep.bind(this));
-      this.animation.controller.step.setAttribute('max', range / 10000);
-      this.animation.controller.step.setAttribute('min', range / 500000);
-      this.animation.controller.step.setAttribute('step', range / 1000000);
+      this.animation.controller.step.addEventListener('input', throttle(this.updateAnimationStep.bind(this), 150));
+      this.animation.controller.step.setAttribute('max', this.animation.step * 50);
+      this.animation.controller.step.setAttribute('min', this.animation.step / 10);
+      this.animation.controller.step.setAttribute('step', this.animation.step);
       this.animation.controller.step.setAttribute('value', this.animation.step);
     }
 
@@ -445,6 +487,7 @@ class SliderParameter extends Parameter {
   }
 
   async updateAnimationStep(e) {
+    console.log('updating animation step', e.target.value);
     this.animation.step = Number(e.target.value);
   }
 
@@ -799,36 +842,41 @@ class LogSlider {
       min: 20,
       max: 100,
       step: 0.1,
-      animationController: 'resolution-animate'
+      animationController: 'resolution-animate',
+      animationStep: 1 / 5000
     }),
     len: new SliderParameter("len", {
       min: 1,
       max: 60,
       step: 0.1,
-      animationController: 'len-animate'
+      animationController: 'len-animate',
+      animationStep: 1 / 1000
     }),
     width: new SliderParameter("width", {
       min: 1,
       max: 10,
       step: 0.1,
       generate1: true,
-      animationController: 'width-animate'
+      animationController: 'width-animate',
+      animationStep: 1 / 1000
     }),
     xModDepth: new SliderParameter("xModDepth", {
       min: 1,
       max: 10,
-      step: 0.1,
+      step: 0.01,
       transformer: new LogSlider(),
       generateIntegers: true,
-      animationController: 'xModDepth-animate'
+      animationController: 'xModDepth-animate',
+      animationStep: 1 / 10000
     }),
     yModDepth: new SliderParameter("yModDepth", {
       min: 1,
       max: 10,
-      step: 0.1,
+      step: 0.01,
       transformer: new LogSlider(),
       generateIntegers: true,
-      animationController: 'yModDepth-animate'
+      animationController: 'yModDepth-animate',
+      animationStep: 1 / 10000
     }),
     lineColor: new OptionsParameter("lineColor", lineColors),
     oscillatorX: new OptionsParameter("oscillatorX", oscillatorsX),
