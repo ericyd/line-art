@@ -1,0 +1,29 @@
+{
+  "name": "line-art",
+  "version": "1.0.0",
+  "description": "Simple UI to explore the beauty of art",
+  "main": "js.js",
+  "scripts": {
+    "build": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericyd/line-art.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ericyd/line-art/issues"
+  },
+  "homepage": "https://github.com/ericyd/line-art#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-sass": "^4.0.1",
+    "gulp-sourcemaps": "^2.6.4"
+  }
+}
