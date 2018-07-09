@@ -498,12 +498,15 @@ class SliderParameter extends Parameter {
     this.animate();
   }
 
+  // TODO: babel isn't transforming async correctly...?
   // these don't need to be handled synchronously - effects are non-critical
-  async toggleAnimationDirection() {
+  toggleAnimationDirection() {
+  // async toggleAnimationDirection() {
     this.animation.isIncrementing = !this.animation.isIncrementing;
   }
 
-  async updateAnimationStep(e) {
+  updateAnimationStep(e) {
+  // async updateAnimationStep(e) {
     this.animation.step = Number(e.target.value);
   }
 
