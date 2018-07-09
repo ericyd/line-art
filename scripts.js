@@ -1,8 +1,8 @@
 "use strict";
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -203,6 +203,82 @@ function throttle(func, wait) {
   };
 
   return throttled;
+}
+
+function loadParams() {
+  var params = new URL(window.location).searchParams;
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = params[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var _ref3 = _step.value;
+
+      var _ref4 = _slicedToArray(_ref3, 2);
+
+      var key = _ref4[0];
+      var value = _ref4[1];
+
+      // TODO: should probably expose a better API than accessing mainCanvas.params directly
+      mainCanvas.params[key].setValue(value);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+}
+
+function getShareURL() {
+  // set URL and delete any existing params
+  var baseURL = new URL(window.location);
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = baseURL.searchParams[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var _ref5 = _step2.value;
+
+      var _ref6 = _slicedToArray(_ref5, 2);
+
+      var key = _ref6[0];
+      var value = _ref6[1];
+
+      baseURL.searchParams.delete(key);
+    }
+    // get new params and append to baseURL searchParams
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+        _iterator2.return();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  var params = mainCanvas.params;
+  Object.keys(params).forEach(function (param) {
+    baseURL.searchParams.append(param, round2(params[param].rawValue));
+  });
+  // display result to user
+  prompt("Copy this URL and send it to someone awesome", baseURL.toString());
 }
 
 // COLLECTIONS FOR OPTIONPARAMETERS
@@ -459,22 +535,22 @@ var SliderParameter = function (_Parameter) {
   function SliderParameter(param) {
     var _ret;
 
-    var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-        min = _ref3.min,
-        max = _ref3.max,
-        step = _ref3.step,
-        _ref3$transformer = _ref3.transformer,
-        transformer = _ref3$transformer === undefined ? {
+    var _ref7 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+        min = _ref7.min,
+        max = _ref7.max,
+        step = _ref7.step,
+        _ref7$transformer = _ref7.transformer,
+        transformer = _ref7$transformer === undefined ? {
       value: id,
       position: id
-    } : _ref3$transformer,
-        _ref3$generateInteger = _ref3.generateIntegers,
-        generateIntegers = _ref3$generateInteger === undefined ? false : _ref3$generateInteger,
-        _ref3$generate = _ref3.generate1,
-        generate1 = _ref3$generate === undefined ? false : _ref3$generate,
-        _ref3$animationContro = _ref3.animationController,
-        animationController = _ref3$animationContro === undefined ? false : _ref3$animationContro,
-        animationStep = _ref3.animationStep;
+    } : _ref7$transformer,
+        _ref7$generateInteger = _ref7.generateIntegers,
+        generateIntegers = _ref7$generateInteger === undefined ? false : _ref7$generateInteger,
+        _ref7$generate = _ref7.generate1,
+        generate1 = _ref7$generate === undefined ? false : _ref7$generate,
+        _ref7$animationContro = _ref7.animationController,
+        animationController = _ref7$animationContro === undefined ? false : _ref7$animationContro,
+        animationStep = _ref7.animationStep;
 
     _classCallCheck(this, SliderParameter);
 
@@ -565,6 +641,7 @@ var SliderParameter = function (_Parameter) {
       this.animate();
     }
 
+    // TODO: babel isn't transforming async correctly...?
     // these don't need to be handled synchronously - effects are non-critical
 
   }, {
@@ -1020,15 +1097,15 @@ var MainCanvas = function (_Drawing2) {
 
 var LogSlider = function () {
   function LogSlider() {
-    var _ref4 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-        _ref4$minpos = _ref4.minpos,
-        minpos = _ref4$minpos === undefined ? 1 : _ref4$minpos,
-        _ref4$maxpos = _ref4.maxpos,
-        maxpos = _ref4$maxpos === undefined ? 10 : _ref4$maxpos,
-        _ref4$minval = _ref4.minval,
-        minval = _ref4$minval === undefined ? 0.1 : _ref4$minval,
-        _ref4$maxval = _ref4.maxval,
-        maxval = _ref4$maxval === undefined ? 100 : _ref4$maxval;
+    var _ref8 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref8$minpos = _ref8.minpos,
+        minpos = _ref8$minpos === undefined ? 1 : _ref8$minpos,
+        _ref8$maxpos = _ref8.maxpos,
+        maxpos = _ref8$maxpos === undefined ? 10 : _ref8$maxpos,
+        _ref8$minval = _ref8.minval,
+        minval = _ref8$minval === undefined ? 0.1 : _ref8$minval,
+        _ref8$maxval = _ref8.maxval,
+        maxval = _ref8$maxval === undefined ? 100 : _ref8$maxval;
 
     _classCallCheck(this, LogSlider);
 
@@ -1117,6 +1194,8 @@ var LogSlider = function () {
   // Use this if you want MainCanvas to load by default
   mainCanvas = new MainCanvas(mainCanvasID).setParams(params).setEquations().draw();
   document.getElementById('mainCanvasControls').classList.remove('hide');
+  loadParams();
+  mainCanvas.setParams(params).update();
 
   // generate thumbnails
   var refreshParams = refresh(params);
@@ -1134,7 +1213,9 @@ var LogSlider = function () {
   document.getElementById('open-sidebar').addEventListener('click', toggleSidebar);
 
   // enable downloading image
-  var downloader = document.getElementById("downloader");
+  var downloader = document.getElementById("downloadBtn");
   downloader.addEventListener("click", download);
+
+  document.getElementById("shareBtn").addEventListener("click", getShareURL);
 })();
 //# sourceMappingURL=scripts.js.map

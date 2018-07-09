@@ -4,7 +4,8 @@
   "description": "Simple UI to explore the beauty of art",
   "main": "js.js",
   "scripts": {
-    "build": "gulp"
+    "build": "gulp",
+    "watch": "gulp watch"
   },
   "repository": {
     "type": "git",

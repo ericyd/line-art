@@ -6,6 +6,11 @@ const sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('default', ['js', 'css']);
 
+gulp.task('watch', function() {
+  gulp.watch('./src/*.js', ['js']);
+  gulp.watch('./src/**/*.scss', ['css']);
+});
+
 gulp.task('js', function() {
   // babelify and concatenate scripts
   return gulp.src('./src/*.js')

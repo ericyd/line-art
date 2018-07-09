@@ -99,6 +99,7 @@ fieldset {
 /* BUTTONS
 =============== */
 .btn {
+  font-size: 1em;
   padding: 1em;
   border: 1px solid skyblue;
   border-radius: 0.2em;
