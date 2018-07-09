@@ -221,6 +221,7 @@ function loadParams() {
       var value = _ref4[1];
 
       // TODO: should probably expose a better API than accessing mainCanvas.params directly
+      value = key === 'bgColor' ? value : Number(value);
       mainCanvas.params[key].setValue(value);
     }
   } catch (err) {

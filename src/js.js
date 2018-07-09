@@ -176,6 +176,7 @@ function loadParams() {
   const params = new URL(window.location).searchParams;
   for (let [key, value] of params) {
     // TODO: should probably expose a better API than accessing mainCanvas.params directly
+    value = key === 'bgColor' ? value : Number(value);
     mainCanvas.params[key].setValue(value);
   }
 }
