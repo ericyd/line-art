@@ -1,0 +1,70 @@
+/* THUMBNAILS/SIDEBAR
+=============== */
+
+.push-body {
+  -webkit-transition: all $transition-time ease;
+  -moz-transition: all $transition-time ease;
+  transition: all $transition-time ease;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.sidebar {
+  /* thanks to jPushMenu for this inspiration
+   https://github.com/takien/jPushMenu/blob/1e960b77fb3666434a580eb6980403b049f79355/css/jPushMenu.css */
+  -webkit-transition: all $transition-time ease;
+  -moz-transition: all $transition-time ease;
+  transition: all $transition-time ease;
+  border: 0;
+  border-right: 1px solid #000;
+  background-color: $color-background;
+  padding: 1em 0;
+  position: absolute;
+  top: 0;
+  width: 320px;
+  height: 100vh;
+  z-index: 1000;
+  overflow-y: scroll;
+}
+
+.sidebar.collapsed {
+  left: -320px;
+}
+
+.sidebar.expanded {
+  left: 0;
+}
+
+.sidebar__link {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #000;
+}
+
+.sidebar__header {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  align-content: center;
+  align-items: center;
+}
+
+.sidebar__thumbnails {
+  display: flex;
+  flex-basis: 320px;
+  flex-flow: column;
+  align-items: center;
+}
+
+.sidebar__thumb {
+  padding: 0;
+  margin: 3em 0 0 0;
+  cursor: pointer;
+}
+
+#close-sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

@@ -2,6 +2,20 @@
 // ================
 
 class Drawing {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  params: object; // TODO: make more descriptive
+  radius: number;
+  useImageData: boolean;
+  imageData: ImageData;
+  xScale: (number) => number;
+  yScale: (number) => number;
+  max: number;
+  getLineColor: (number) => number;
+  getPixelColor: (number) => Array<number>;
+  lineWidth: number;
+  increment: number;
+  offsetPoint: (number) => number;
   constructor(canvasID) {
     this.canvas = document.getElementById(canvasID);
     this.ctx = this.canvas.getContext('2d');

@@ -4,9 +4,9 @@
   "description": "Simple UI to explore the beauty of art",
   "main": "js.js",
   "scripts": {
-    "build": "gulp",
-    "watch": "gulp watch",
-    "rollup": "rollup -c"
+    "js": "rollup -c",
+    "css": "node-sass --output-style compressed src/scss/style.scss > style.css",
+    "build": "npm run js && npm run css"
   },
   "repository": {
     "type": "git",
@@ -20,9 +20,7 @@
   },
   "homepage": "https://github.com/ericyd/line-art#readme",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-sass": "^4.0.1",
+    "node-sass": "^4.9.2",
     "rollup": "^0.62.0",
     "rollup-plugin-typescript": "^0.8.1"
   },

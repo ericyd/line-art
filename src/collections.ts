@@ -3,6 +3,12 @@ import { valToRGBFactory, fixedColorFactory } from './helpers';
 // COLLECTIONS FOR OPTIONPARAMETERS
 // ================
 
+interface Oscillator {
+  id: string,
+  value: (number) => number,
+  display: string
+}
+
 // keeping for possible future experimentation
 const oldOscillators = [
   t => (Math.cos(t) + 1) / 2,
@@ -11,7 +17,7 @@ const oldOscillators = [
 ];
 
 // values must be functions that return a number
-export const oscillatorsX = [
+export const oscillatorsX: Array<Oscillator> = [
   {
     id: 'osc0',
     value: t => Math.sin(t),
@@ -78,7 +84,7 @@ export const oscillatorsX = [
   }
 ];
 
-export const oscillatorsY = [
+export const oscillatorsY: Array<Oscillator> = [
   {
     id: 'osc10',
     value: t => Math.sin(t),
@@ -142,8 +148,14 @@ export const oscillatorsY = [
   }
 ];
 
+interface LineColor {
+  id: string,
+  value: () => (number) => string,
+  display: string
+}
+
 // values must be functions that return functions that return a color
-export const lineColors = [
+export const lineColors: Array<LineColor> = [
   {
     id: 'colorize',
     value: valToRGBFactory,

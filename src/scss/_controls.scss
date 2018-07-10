@@ -1,0 +1,116 @@
+/* CONTROLS
+=============== */
+
+.control-group {
+  display: block;
+  padding: 0em;
+}
+
+.control-group:last-of-type {
+  margin-top: 3em;
+}
+
+.control-group__legend {
+  background-color: $color-background--dark;
+  display: block;
+  padding: 1em;
+  margin-bottom: 0.5em;
+  width: 100%;
+  border-bottom: 1px solid $color-foreground;
+  cursor: pointer;
+}
+
+.is-expanded .control-group__legend {
+  border: 0;
+}
+
+.control__input {
+  display: block;
+}
+
+.control__input--range {
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+
+.control__input--70 {
+  width: 70%;
+}
+
+.main__radios {
+  border: 1px solid #999;
+  padding: 1em 1em 0 1em;
+  border-radius: 0.2em;
+}
+
+.control__input--radio {
+  position: absolute;
+  top: -10000;
+  left: -10000;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+}
+
+.control__label--block {
+  display: block !important;
+}
+
+.control__label--radio {
+  position: relative;
+  display: inline-block;
+  padding-left: 1em;
+  padding-right: 1em;
+  margin-bottom: 1em;
+  border-right: 1px #999 solid;
+}
+
+.control__label--radio:nth-of-type(3n) {
+  border-right: 0;
+}
+
+.control__input--radio:checked+label::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 1em;
+  left: 0;
+  background-color: skyblue;
+  width: 100%;
+  height: 0.5em;
+  opacity: 0.5;
+}
+
+.animation-direction-toggle {
+  border: 0;
+  background-color: $color-background;
+  color: $color-foreground;
+  font-size: 1.5em;
+  padding: 0;
+}
+
+.toggle-target {
+  display: none;
+  margin-bottom: 1.5em;
+}
+.is-expanded .toggle-target {
+  display: block;
+  margin-bottom: 3em;
+}
+
+.toggle-indicator {
+  display: inline-block;
+  color: $color-foreground;
+}
+
+.toggler:hover .toggle-indicator {
+  fill: $color-foreground;
+}
+
+.is-expanded .toggle-indicator {
+  transform-origin: 0 1em;
+  transform: rotate(45deg);
+}

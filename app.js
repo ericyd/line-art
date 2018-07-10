@@ -365,7 +365,6 @@
         params.forEach(function (value, key) {
             // TODO: should probably expose a better API than accessing mainCanvas.params directly
             value = key === 'bgColor' ? value : Number(value);
-            // console.log(key, value, mainCanvas);
             mainCanvas.params[key].setValue(value);
         });
     }

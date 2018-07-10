@@ -1,0 +1,32 @@
+/* BUTTONS
+=============== */
+
+.btn {
+  font-size: 1em;
+  padding: 1em;
+  border: 1px solid skyblue;
+  border-radius: 0.2em;
+  background: #fff;
+  transition: all 0.3s;
+  text-decoration: none;
+  cursor: pointer;
+  color: #000;
+  margin: 0.5em 0;
+  display: inline-block;
+}
+
+.btn:hover {
+  background: skyblue;
+}
+
+.btn--secondary {
+  background-color: $color-background;
+  color: $color-foreground;
+  border: 0;
+  font-size: 20px;
+}
+
+.btn--secondary svg {
+  fill: $color-foreground;
+  border: 0;
+}
