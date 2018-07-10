@@ -5,7 +5,8 @@
   "main": "js.js",
   "scripts": {
     "build": "gulp",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "rollup": "rollup -c"
   },
   "repository": {
     "type": "git",
@@ -19,12 +20,11 @@
   },
   "homepage": "https://github.com/ericyd/line-art#readme",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
     "gulp": "^3.9.1",
-    "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-sass": "^4.0.1",
-    "gulp-sourcemaps": "^2.6.4"
-  }
+    "rollup": "^0.62.0",
+    "rollup-plugin-typescript": "^0.8.1"
+  },
+  "dependencies": {}
 }

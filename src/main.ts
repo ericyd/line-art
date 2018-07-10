@@ -172,6 +172,31 @@ function throttle(func, wait, options = {}) {
   return throttled;
 }
 
+function loadParams() {
+  console.log('here');
+  const params = new URL(window.location).searchParams;
+  for (let [key, value] of params) {
+    // TODO: should probably expose a better API than accessing mainCanvas.params directly
+    value = key === 'bgColor' ? value : Number(value);
+    mainCanvas.params[key].setValue(value);
+  }
+}
+
+function getShareURL() {
+  // set URL and delete any existing params
+  const baseURL = new URL(window.location);
+  for (let [key, value] of baseURL.searchParams) {
+    baseURL.searchParams.delete(key);
+  }
+  // get new params and append to baseURL searchParams
+  const params = mainCanvas.params;
+  Object.keys(params).forEach(param => {
+    baseURL.searchParams.append(param, round2(params[param].rawValue));
+  });
+  // display result to user
+  prompt("Copy this URL and send it to someone awesome", baseURL.toString());
+}
+
 
 // COLLECTIONS FOR OPTIONPARAMETERS
 // ================
@@ -498,12 +523,15 @@ class SliderParameter extends Parameter {
     this.animate();
   }
 
+  // TODO: babel isn't transforming async correctly...?
   // these don't need to be handled synchronously - effects are non-critical
-  async toggleAnimationDirection() {
+  toggleAnimationDirection() {
+  // async toggleAnimationDirection() {
     this.animation.isIncrementing = !this.animation.isIncrementing;
   }
 
-  async updateAnimationStep(e) {
+  updateAnimationStep(e) {
+  // async updateAnimationStep(e) {
     this.animation.step = Number(e.target.value);
   }
 
@@ -926,6 +954,8 @@ class LogSlider {
   // Use this if you want MainCanvas to load by default
   mainCanvas = new MainCanvas(mainCanvasID).setParams(params).setEquations().draw();
   document.getElementById('mainCanvasControls').classList.remove('hide');
+  loadParams();
+  mainCanvas.setParams(params).update();
 
   // generate thumbnails
   var refreshParams = refresh(params);
@@ -943,6 +973,8 @@ class LogSlider {
   document.getElementById('open-sidebar').addEventListener('click', toggleSidebar);
 
   // enable downloading image
-  const downloader = document.getElementById("downloader");
+  const downloader = document.getElementById("downloadBtn");
   downloader.addEventListener("click", download);
+
+  document.getElementById("shareBtn").addEventListener("click", getShareURL);
 })();
