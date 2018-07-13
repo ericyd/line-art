@@ -5,6 +5,7 @@
   "main": "js.js",
   "scripts": {
     "js": "rollup -c",
+    "watch": "rollup -c -w",
     "css": "node-sass --output-style compressed src/scss/style.scss > style.css",
     "build": "npm run js && npm run css"
   },

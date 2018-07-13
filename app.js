@@ -50,20 +50,33 @@
             console.log(rgba1);
         };
         Drawing.prototype.drawPixel = function (x, y, r, g, b, a) {
-            // if x and y are not rounded this returns very inaccurate results (why?)
-            var index = (Math.round(y) * this.canvas.width + Math.round(x)) * 4;
+            var index = (y * this.canvas.width + x) * 4;
             this.imageData.data[index + 0] = r;
             this.imageData.data[index + 1] = g;
             this.imageData.data[index + 2] = b;
             this.imageData.data[index + 3] = a;
         };
+        // this method has some serious issues:
+        // 1. the pixels are aliased
+        // 2. the lineWidth is very challenging to modulate
+        //     it might require a combination of spreading the x/y and adjusting the alpha
+        // 3. testing it's performance would be challenging, and all of these custom
+        //     functions may well be slower
+        // Therefore putting on hold for now
         Drawing.prototype.drawDotsImageData = function () {
             // get imageData here to capture background color;
             this.imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
             for (var t = 0; t <= this.max; t += this.increment) {
-                var x = this.xScale(t);
-                var y = this.yScale(t);
+                // if x and y are not rounded, the pixel indexing is very inaccurate (why?)
+                var x = Math.round(this.xScale(t));
+                var y = Math.round(this.yScale(t));
                 var _a = this.getPixelColor(t), r = _a[0], g = _a[1], b = _a[2];
+                var spread = Math.floor(this.lineWidth / 3);
+                for (var i = x - spread; i <= x + spread; i++) {
+                    for (var j = y - spread; j <= y + spread; j++) {
+                        this.drawPixel(i, j, r, g, b, 255);
+                    }
+                }
                 this.drawPixel(x, y, r, g, b, 255);
             }
             this.ctx.putImageData(this.imageData, 0, 0);
