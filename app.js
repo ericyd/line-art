@@ -7,6 +7,15 @@
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
+    function __awaiter(thisArg, _arguments, P, generator) {
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments)).next());
+        });
+    }
+
     // DRAWINGS
     // ================
     var Drawing = (function () {
@@ -141,14 +150,15 @@
         __extends(Thumbnail, _super);
         function Thumbnail(canvasID, mainCanvas) {
             _super.call(this, canvasID);
+            this.mainCanvas = mainCanvas;
             this.canvas.addEventListener('click', this.onClick.bind(this));
             this.values = {};
-            this.mainCanvas = mainCanvas;
         }
         Thumbnail.prototype.onClick = function (e) {
             var _this = this;
             document.getElementById('mainCanvasControls').classList.remove('hide');
-            Object.values(this.params).forEach(function (param) {
+            Object.keys(this.params).forEach(function (key) {
+                var param = _this.params[key];
                 param.setValue(_this.values[param.param]);
             });
             this.mainCanvas.setParams(this.params).update();
@@ -165,7 +175,8 @@
          */
         Thumbnail.prototype.setParams = function (params) {
             var _this = this;
-            Object.values(params).forEach(function (param) {
+            Object.keys(params).forEach(function (key) {
+                var param = params[key];
                 param.generate();
                 _this.cacheValue(param.param, param.rawValue);
             });
@@ -184,7 +195,8 @@
          */
         MainCanvas.prototype.setParams = function (params) {
             var _this = this;
-            Object.values(params).forEach(function (param) {
+            Object.keys(params).forEach(function (key) {
+                var param = params[key];
                 param.on('update', _this.update.bind(_this));
             });
             this.params = params;
@@ -354,14 +366,7 @@
         return throttled;
     }
     function loadParams(mainCanvas) {
-        // console.log('here');
         var params = new URL(window.location).searchParams;
-        // console.log(params, window.location, new URL(window.location))
-        console.log('foreach');
-        params.forEach(function (_a) {
-            var a = _a[0], b = _a[1], c = _a[2], d = _a[3];
-            return console.log("a:" + a + ", b:" + b + ", c:" + c + ", d:" + d);
-        });
         params.forEach(function (value, key) {
             // TODO: should probably expose a better API than accessing mainCanvas.params directly
             value = key === 'bgColor' ? value : Number(value);
@@ -535,7 +540,37 @@
         }
     ];
 
+    // credit: https://stackoverflow.com/a/846249
+    var LogSlider = (function () {
+        function LogSlider(_a) {
+            var _b = _a === void 0 ? {} : _a, _c = _b.minpos, minpos = _c === void 0 ? 1 : _c, _d = _b.maxpos, maxpos = _d === void 0 ? 10 : _d, _e = _b.minval, minval = _e === void 0 ? 0.1 : _e, _f = _b.maxval, maxval = _f === void 0 ? 100 : _f;
+            this.minpos = minpos;
+            this.maxpos = maxpos;
+            this.minlval = Math.log(minval);
+            this.maxlval = Math.log(maxval);
+            this.scale = (this.maxlval - this.minlval) / (this.maxpos - this.minpos);
+        }
+        LogSlider.prototype.value = function (position) {
+            // return round2(Math.exp((position - this.minpos) * this.scale + this.minlval));
+            return round3(Math.exp((position - this.minpos) * this.scale + this.minlval));
+        };
+        // Calculate slider position from a value
+        LogSlider.prototype.position = function (value) {
+            // return round2(this.minpos + (Math.log(value) - this.minlval) / this.scale);
+            return round3(this.minpos + (Math.log(value) - this.minlval) / this.scale);
+        };
+        return LogSlider;
+    }());
     var id = function (x) { return x; };
+    var IdentityTransformer = (function () {
+        function IdentityTransformer() {
+            this.value = id;
+            this.position = id;
+            return this;
+        }
+        return IdentityTransformer;
+    }());
+
     // PARAMETERS
     // ================
     /**
@@ -548,6 +583,7 @@
      */
     var Parameter = (function () {
         function Parameter(param, ids, rawValueType) {
+            this.param = param;
             this.rawValueType = rawValueType;
             this.events = {};
             this.controls = ids.map(function (id) { return document.getElementById(id); });
@@ -600,12 +636,8 @@
     }());
     var SliderParameter = (function (_super) {
         __extends(SliderParameter, _super);
-        // TODO: document transformer - purpose and implementation
         function SliderParameter(param, _a) {
-            var _b = _a === void 0 ? {} : _a, min = _b.min, max = _b.max, step = _b.step, _c = _b.transformer, transformer = _c === void 0 ? {
-                value: id,
-                position: id
-            } : _c, _d = _b.generateIntegers, generateIntegers = _d === void 0 ? false : _d, _e = _b.generate1, generate1 = _e === void 0 ? false : _e, _f = _b.animationController, animationController = _f === void 0 ? false : _f, animationStep = _b.animationStep;
+            var _b = _a === void 0 ? {} : _a, _c = _b.min, min = _c === void 0 ? 1 : _c, _d = _b.max, max = _d === void 0 ? 10 : _d, _e = _b.step, step = _e === void 0 ? 0.1 : _e, _f = _b.transformer, transformer = _f === void 0 ? new IdentityTransformer() : _f, _g = _b.generateIntegers, generateIntegers = _g === void 0 ? false : _g, _h = _b.generate1, generate1 = _h === void 0 ? false : _h, _j = _b.animationController, animationController = _j === void 0 ? false : _j, _k = _b.animationStep, animationStep = _k === void 0 ? 0.01 : _k;
             _super.call(this, param, [param], 'number');
             this.param = param;
             this.max = max;
@@ -646,9 +678,9 @@
         }
         SliderParameter.prototype.setAttributes = function () {
             this.controls[0].setAttribute('value', this.rawValue);
-            this.controls[0].setAttribute('step', this.step);
-            this.controls[0].setAttribute('max', this.max);
-            this.controls[0].setAttribute('min', this.min);
+            this.controls[0].setAttribute('step', String(this.step));
+            this.controls[0].setAttribute('max', String(this.max));
+            this.controls[0].setAttribute('min', String(this.min));
             return this;
         };
         SliderParameter.prototype.update = function (value, emit) {
@@ -685,15 +717,16 @@
             this.animation.isActive = !this.animation.isActive;
             this.animate();
         };
-        // TODO: babel isn't transforming async correctly...?
         // these don't need to be handled synchronously - effects are non-critical
         SliderParameter.prototype.toggleAnimationDirection = function () {
-            // async toggleAnimationDirection() {
-            this.animation.isIncrementing = !this.animation.isIncrementing;
+            return __awaiter(this, void 0, void 0, function* () {
+                this.animation.isIncrementing = !this.animation.isIncrementing;
+            });
         };
         SliderParameter.prototype.updateAnimationStep = function (e) {
-            // async updateAnimationStep(e) {
-            this.animation.step = Number(e.target.value);
+            return __awaiter(this, void 0, void 0, function* () {
+                this.animation.step = Number(e.target.value);
+            });
         };
         SliderParameter.prototype.animate = function () {
             if (this.animation.isActive) {
@@ -838,30 +871,6 @@
         };
         return ColorParameter;
     }(Parameter));
-
-    // TRANSFORMERS
-    // ================
-    // credit: https://stackoverflow.com/a/846249
-    var LogSlider = (function () {
-        function LogSlider(_a) {
-            var _b = _a === void 0 ? {} : _a, _c = _b.minpos, minpos = _c === void 0 ? 1 : _c, _d = _b.maxpos, maxpos = _d === void 0 ? 10 : _d, _e = _b.minval, minval = _e === void 0 ? 0.1 : _e, _f = _b.maxval, maxval = _f === void 0 ? 100 : _f;
-            this.minpos = minpos;
-            this.maxpos = maxpos;
-            this.minlval = Math.log(minval);
-            this.maxlval = Math.log(maxval);
-            this.scale = (this.maxlval - this.minlval) / (this.maxpos - this.minpos);
-        }
-        LogSlider.prototype.value = function (position) {
-            // return round2(Math.exp((position - this.minpos) * this.scale + this.minlval));
-            return round3(Math.exp((position - this.minpos) * this.scale + this.minlval));
-        };
-        // Calculate slider position from a value
-        LogSlider.prototype.position = function (value) {
-            // return round2(this.minpos + (Math.log(value) - this.minlval) / this.scale);
-            return round3(this.minpos + (Math.log(value) - this.minlval) / this.scale);
-        };
-        return LogSlider;
-    }());
 
     // INITIALIZATION
     // ==============

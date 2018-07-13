@@ -176,11 +176,7 @@ export function throttle(func, wait, options = {}) {
 }
 
 export function loadParams(mainCanvas) {
-  // console.log('here');
   const params = new URL(window.location).searchParams;
-  // console.log(params, window.location, new URL(window.location))
-  console.log('foreach');
-  params.forEach(([a, b, c, d]) => console.log(`a:${a}, b:${b}, c:${c}, d:${d}`));
   params.forEach((value, key) => {
     // TODO: should probably expose a better API than accessing mainCanvas.params directly
     value = key === 'bgColor' ? value : Number(value);

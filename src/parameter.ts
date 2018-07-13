@@ -1,6 +1,5 @@
 import { throttle, round2, valToRGBFactory } from './helpers';
-
-const id = x => x;
+import { Transformer, IdentityTransformer } from './transformer';
 
 // PARAMETERS
 // ================
@@ -13,9 +12,15 @@ const id = x => x;
  *   this.rawValue correlates to the current value in this.controls
  *   this.value is managed internally and correlates to the actual value used in the Drawing
  */
-class Parameter {
-  constructor(param, ids, rawValueType) {
-    this.rawValueType = rawValueType;
+export class Parameter {
+  events: { [s: string]: () => any };
+  controls: Array<HTMLElement>;
+  controlValue: any;
+  value: any;
+  rawValue: any;
+  update: (value: string, emit?: boolean) => Parameter;
+  setAttributes: () => Parameter;
+  constructor(public param: string, ids, public rawValueType: any) {
     this.events = {};
     this.controls = ids.map(id => document.getElementById(id));
     try {
@@ -71,24 +76,27 @@ class Parameter {
 
 export class SliderParameter extends Parameter {
   // TODO: document transformer - purpose and implementation
+  max: number;
+  min: number;
+  step: number;
+  transformer: Transformer;
+  generateIntegers: boolean;
+  generate1: boolean;
+  animation: { [s: string]: any }
   constructor(
-    param,
+    public param: string,
     {
-      min,
-      max,
-      step,
-      transformer = {
-        value: id,
-        position: id
-      },
+      min = 1,
+      max = 10,
+      step = 0.1,
+      transformer = new IdentityTransformer(),
       generateIntegers = false,
       generate1 = false,
       animationController = false,
-      animationStep
+      animationStep = 0.01
     } = {}
   ) {
     super(param, [param], 'number');
-    this.param = param;
     this.max = max;
     this.min = min;
     this.step = step;
@@ -146,9 +154,9 @@ export class SliderParameter extends Parameter {
 
   setAttributes() {
     this.controls[0].setAttribute('value', this.rawValue);
-    this.controls[0].setAttribute('step', this.step);
-    this.controls[0].setAttribute('max', this.max);
-    this.controls[0].setAttribute('min', this.min);
+    this.controls[0].setAttribute('step', String(this.step));
+    this.controls[0].setAttribute('max', String(this.max));
+    this.controls[0].setAttribute('min', String(this.min));
     return this;
   }
 
@@ -188,15 +196,12 @@ export class SliderParameter extends Parameter {
     this.animate();
   }
 
-  // TODO: babel isn't transforming async correctly...?
   // these don't need to be handled synchronously - effects are non-critical
-  toggleAnimationDirection() {
-    // async toggleAnimationDirection() {
+  async toggleAnimationDirection() {
     this.animation.isIncrementing = !this.animation.isIncrementing;
   }
 
-  updateAnimationStep(e) {
-    // async updateAnimationStep(e) {
+  async updateAnimationStep(e) {
     this.animation.step = Number(e.target.value);
   }
 
@@ -236,9 +241,8 @@ export class OptionsParameter extends Parameter {
    * @param {string} param
    * @param {{id: string, value: function, display: string}[]} options
    */
-  constructor(param, options) {
+  constructor(public param: string, options) {
     super(param, options.map(o => o.id), 'number');
-    this.param = param;
     this.options = options;
     this.generate()
       .addEventListeners()
@@ -249,7 +253,7 @@ export class OptionsParameter extends Parameter {
 
   setAttributes() {
     this.options.forEach((option, i) => {
-      const el = document.getElementById(option.id);
+      const el = <HTMLInputElement>document.getElementById(option.id);
       el.dataset.display = option.display;
       el.value = i;
     });
@@ -282,9 +286,8 @@ export class OptionsParameter extends Parameter {
 }
 
 export class BooleanParameter extends Parameter {
-  constructor(param) {
+  constructor(public param: string) {
     super(param, [param]);
-    this.param = param;
     this.generate()
       .addEventListeners()
       .updateDisplay(this.value);
@@ -318,9 +321,8 @@ export class BooleanParameter extends Parameter {
 }
 
 export class ColorParameter extends Parameter {
-  constructor(param) {
+  constructor(public param: string) {
     super(param, [param]);
-    this.param = param;
     this.generate()
       .addEventListeners()
       .setAttributes()

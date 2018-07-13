@@ -1,23 +1,27 @@
+import { Parameter } from './parameter';
+
 // DRAWINGS
 // ================
 
 class Drawing {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  params: object; // TODO: make more descriptive
+  params: { [s: string]: Parameter }; // TODO: make more descriptive
   radius: number;
   useImageData: boolean;
   imageData: ImageData;
   xScale: (number) => number;
   yScale: (number) => number;
   max: number;
-  getLineColor: (number) => number;
+  getLineColor: (number) => string;
   getPixelColor: (number) => Array<number>;
   lineWidth: number;
   increment: number;
   offsetPoint: (number) => number;
+  x: number;
+  y: number;
   constructor(canvasID) {
-    this.canvas = document.getElementById(canvasID);
+    this.canvas = <HTMLCanvasElement>document.getElementById(canvasID);
     this.ctx = this.canvas.getContext('2d');
     this.params = {};
     this.radius = Math.max(this.canvas.width, this.canvas.height) / 2.1;
@@ -162,16 +166,17 @@ class Drawing {
 }
 
 export class Thumbnail extends Drawing {
-  constructor(canvasID, mainCanvas) {
+  values: { [s: string]: number };
+  constructor(canvasID: string, public mainCanvas: MainCanvas) {
     super(canvasID);
     this.canvas.addEventListener('click', this.onClick.bind(this));
     this.values = {};
-    this.mainCanvas = mainCanvas;
   }
 
   onClick(e) {
     document.getElementById('mainCanvasControls').classList.remove('hide');
-    Object.values(this.params).forEach(param => {
+    Object.keys(this.params).forEach(key => {
+      const param = this.params[key];
       param.setValue(this.values[param.param]);
     });
     this.mainCanvas.setParams(this.params).update();
@@ -189,7 +194,8 @@ export class Thumbnail extends Drawing {
    * @param {Object} params
    */
   setParams(params) {
-    Object.values(params).forEach(param => {
+    Object.keys(params).forEach(key => {
+      const param = params[key];
       param.generate();
       this.cacheValue(param.param, param.rawValue);
     });
@@ -207,7 +213,8 @@ export class MainCanvas extends Drawing {
    * @param {Object} params
    */
   setParams(params) {
-    Object.values(params).forEach(param => {
+    Object.keys(params).forEach(key => {
+      const param = params[key];
       param.on('update', this.update.bind(this));
     });
     this.params = params;
