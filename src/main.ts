@@ -5,7 +5,7 @@ import {
   ColorParameter,
   BooleanParameter
 } from './parameter';
-import { MainCanvas } from './drawing';
+import { MainCanvas, Thumbnail } from './drawing';
 import { LogSlider } from './transformer';
 import {refresh, loadParams, getShareURL, toggleNextBlock, toggleSidebar, download} from './helpers';
 
@@ -92,7 +92,14 @@ import {refresh, loadParams, getShareURL, toggleNextBlock, toggleSidebar, downlo
 
   // enable downloading image
   const downloader = document.getElementById('downloadBtn');
-  downloader.addEventListener('click', download);
+  document.getElementById('downloadBtn').addEventListener('click', (e) => {
+    download(e, 'mainCanvas');
+  });
+  document.getElementById('downloadBtnHiRes').addEventListener('click', (e) => {
+    new Thumbnail('downloadCanvas', mainCanvas).setParams(params, false).setEquations().draw();
+    download(e, 'downloadCanvas');
+  });
+  
 
   document.getElementById('shareBtn').addEventListener('click', getShareURL(mainCanvas));
 })();

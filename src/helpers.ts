@@ -108,10 +108,10 @@ export function fixedColorFactory(color) {
   };
 }
 
-export function download(e) {
+export function download(e, id) {
   e.target.download = 'image.png';
   e.target.href = document
-    .getElementById('mainCanvas')
+    .getElementById(id)
     .toDataURL('image/png')
     .replace(/^data:image\/[^;]/, 'data:application/octet-stream');
 }
@@ -119,7 +119,7 @@ export function download(e) {
 export function refresh(params, mainCanvas) {
   return () => {
     document.querySelectorAll('.sidebar__thumb').forEach((el, i) => {
-      new Thumbnail(el.id, mainCanvas).setParams(params).update();
+      new Thumbnail(el.id, mainCanvas).setParams(params, true).update();
     });
   };
 }

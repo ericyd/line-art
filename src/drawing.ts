@@ -206,10 +206,12 @@ export class Thumbnail extends Drawing {
   /**
    * @param {Object} params
    */
-  setParams(params) {
+  setParams(params, generate: boolean) {
     Object.keys(params).forEach(key => {
       const param = params[key];
-      param.generate();
+      if (generate) {
+        param.generate();
+      }
       this.cacheValue(param.param, param.rawValue);
     });
     this.params = params;

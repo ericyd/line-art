@@ -402,20 +402,23 @@
     </fieldset>
 
     <fieldset class="control-group">
+      <button id="shareBtn" class="btn">Share!</button>
+      <br />
       <a href="#" id="downloadBtn" class="btn" download="image.png">Download</a>
       <br />
-      <button id="shareBtn" class="btn">Share!</button>
+      <a href="#" id="downloadBtnHiRes" class="btn" download="image.png">Download Hi Res</a>
       <div>
         A few notes:
         <ul>
           <li>To fine-tune a slider, click it and then use the arrow keys</li>
           <li>If things are running slowly, try turning down the resolution</li>
-          <li>Experiment! There are lots of interesting images you can create</li>
+          <li>When downloading Hi Res, you might want to increase line width as it doesn't naturally scale with the image size</li>
         </ul>
       </div>
     </fieldset>
   </div>
   <canvas id="mainCanvas" width="800" height="800"></canvas>
+  <canvas id="downloadCanvas" class="sr-only" width="2000" height="2000"></canvas>
 </section>
 
   <script src="app.js"></script>

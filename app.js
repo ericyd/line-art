@@ -148,11 +148,13 @@
         Thumbnail.prototype.cacheValue = function (param, value) {
             this.values[param] = value;
         };
-        Thumbnail.prototype.setParams = function (params) {
+        Thumbnail.prototype.setParams = function (params, generate) {
             var _this = this;
             Object.keys(params).forEach(function (key) {
                 var param = params[key];
-                param.generate();
+                if (generate) {
+                    param.generate();
+                }
                 _this.cacheValue(param.param, param.rawValue);
             });
             this.params = params;
@@ -250,17 +252,17 @@
             };
         };
     }
-    function download(e) {
+    function download(e, id) {
         e.target.download = 'image.png';
         e.target.href = document
-            .getElementById('mainCanvas')
+            .getElementById(id)
             .toDataURL('image/png')
             .replace(/^data:image\/[^;]/, 'data:application/octet-stream');
     }
     function refresh(params, mainCanvas) {
         return function () {
             document.querySelectorAll('.sidebar__thumb').forEach(function (el, i) {
-                new Thumbnail(el.id, mainCanvas).setParams(params).update();
+                new Thumbnail(el.id, mainCanvas).setParams(params, true).update();
             });
         };
     }
@@ -840,7 +842,13 @@
             .getElementById('open-sidebar')
             .addEventListener('click', toggleSidebar);
         var downloader = document.getElementById('downloadBtn');
-        downloader.addEventListener('click', download);
+        document.getElementById('downloadBtn').addEventListener('click', function (e) {
+            download(e, 'mainCanvas');
+        });
+        document.getElementById('downloadBtnHiRes').addEventListener('click', function (e) {
+            new Thumbnail('downloadCanvas', mainCanvas).setParams(params, false).setEquations().draw();
+            download(e, 'downloadCanvas');
+        });
         document.getElementById('shareBtn').addEventListener('click', getShareURL(mainCanvas));
     })();
 
