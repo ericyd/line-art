@@ -1,6 +1,6 @@
-$color-foreground: rgb(220, 220, 220);
+$color-foreground: rgb(220, 220, 220); // #dcdcdc
 $color-background: rgb(40, 40, 40);
-$color-background--dark: rgb(25, 25, 25);
+$color-background--dark: darken($color-background, 7%);
 $transition-time: 0.3s;
 
 @import 'layout';
