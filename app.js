@@ -7,17 +7,6 @@
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
 
-    function __awaiter(thisArg, _arguments, P, generator) {
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-            function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-            step((generator = generator.apply(thisArg, _arguments)).next());
-        });
-    }
-
-    // DRAWINGS
-    // ================
     var Drawing = (function () {
         function Drawing(canvasID) {
             var _this = this;
@@ -26,13 +15,10 @@
             this.params = {};
             this.radius = Math.max(this.canvas.width, this.canvas.height) / 2.1;
             this.offsetPoint = function (val) { return val + _this.canvas.width / 2; };
-            // TODO: figure out best way to apply lineWidth to pixels drawnn on imageData
             this.useImageData = false;
             this.imageData = this.ctx.createImageData(this.canvas.width, this.canvas.height);
-            // this.canvas.addEventListener('mousemove', this.logDataOnHover.bind(this));
             return this;
         }
-        // currently not used, but could be useful for debugging
         Drawing.prototype.logDataOnHover = function (event) {
             var x = event.layerX;
             var y = event.layerY;
@@ -56,18 +42,9 @@
             this.imageData.data[index + 2] = b;
             this.imageData.data[index + 3] = a;
         };
-        // this method has some serious issues:
-        // 1. the pixels are aliased
-        // 2. the lineWidth is very challenging to modulate
-        //     it might require a combination of spreading the x/y and adjusting the alpha
-        // 3. testing it's performance would be challenging, and all of these custom
-        //     functions may well be slower
-        // Therefore putting on hold for now
         Drawing.prototype.drawDotsImageData = function () {
-            // get imageData here to capture background color;
             this.imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
             for (var t = 0; t <= this.max; t += this.increment) {
-                // if x and y are not rounded, the pixel indexing is very inaccurate (why?)
                 var x = Math.round(this.xScale(t));
                 var y = Math.round(this.yScale(t));
                 var _a = this.getPixelColor(t), r = _a[0], g = _a[1], b = _a[2];
@@ -108,11 +85,9 @@
             return this;
         };
         Drawing.prototype.draw = function () {
-            // clear any previous canvas data and fill bg white
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.ctx.fillStyle = this.params.bgColor.value;
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            // set defaults
             this.ctx.strokeStyle = this.getLineColor(0);
             this.ctx.fillStyle = this.getLineColor(0);
             if (this.params.solid.value) {
@@ -130,10 +105,6 @@
         Drawing.prototype.update = function () {
             this.setEquations().draw();
         };
-        /**
-         * Set drawing functions
-         * Must set params before calling
-         */
         Drawing.prototype.setEquations = function () {
             var _this = this;
             this.xScale = function (t) {
@@ -148,8 +119,6 @@
             };
             this.max = Math.PI * this.params.len.value;
             this.getLineColor = this.params.lineColor.value(this.max, 0);
-            // pixelColor is used when drawing with imageData because individual channels are required
-            // could consider refactoring the factory to return channels by default and then transform as needed
             this.getPixelColor = this.params.lineColor.value(this.max, 0, {
                 returnChannels: true
             });
@@ -176,16 +145,9 @@
             });
             this.mainCanvas.setParams(this.params).update();
         };
-        /**
-         * @param {string} param
-         * @param {any} value
-         */
         Thumbnail.prototype.cacheValue = function (param, value) {
             this.values[param] = value;
         };
-        /**
-         * @param {Object} params
-         */
         Thumbnail.prototype.setParams = function (params) {
             var _this = this;
             Object.keys(params).forEach(function (key) {
@@ -203,9 +165,6 @@
         function MainCanvas(canvasID) {
             _super.call(this, canvasID);
         }
-        /**
-         * @param {Object} params
-         */
         MainCanvas.prototype.setParams = function (params) {
             var _this = this;
             Object.keys(params).forEach(function (key) {
@@ -218,8 +177,6 @@
         return MainCanvas;
     }(Drawing));
 
-    // HELPER FUNCTIONS
-    // ================
     var roundN = function (decimals) {
         return function (val) {
             if (isNaN(val))
@@ -240,22 +197,6 @@
         }
         return Math.round(value).toString(16);
     }
-    /**
-     * Convert numeric value to an rgb hue
-     *
-     * There are six phases that describe the RGB range of hues.
-     * All changes occur from a set "min" to a set "max" based on the desired saturation
-     * 1. Blue increases
-     * 2. Red decreases
-     * 3. Green increases
-     * 4. Blue decreases
-     * 5. Red increases
-     * 6. Green decreases
-     * These phases can be approximated with a clipped sin function offset to different sections of its period
-     *
-     * @param {number} n must satisfy: nMin <= n <= nMax
-     * @returns {any} rgb(num,num,num) | #HHHHHH | [num, num, num]
-     */
     function valToRGBFactory(nMax, nMin, _a) {
         if (nMax === void 0) { nMax = 100; }
         if (nMin === void 0) { nMin = 0; }
@@ -274,7 +215,6 @@
             }
             var n6th = (nMax - nMin) / 6;
             var n12th = n6th / 2;
-            // set min/max based on desired saturation
             var min = 90;
             var max = 212;
             var range = max - min;
@@ -284,7 +224,6 @@
             var channel = function (offset) { return function (x) {
                 return clip(rangeAdjust(Math.sin(x * period(1) + period(offset))));
             }; };
-            // the offset math is a bit opaque to me, but it works
             var r = channel(n6th * 2 - n12th);
             var g = channel(n6th * 6 - n12th);
             var b = channel(n6th * 4 - n12th);
@@ -297,10 +236,6 @@
             return "rgb(" + r(n) + "," + g(n) + "," + b(n) + ")";
         };
     }
-    /**
-     *
-     * @param {string} color must be a hex value
-     */
     function fixedColorFactory(color) {
         return function (_, __, _a) {
             var _b = (_a === void 0 ? {} : _a).returnChannels, returnChannels = _b === void 0 ? false : _b;
@@ -337,7 +272,6 @@
         var listener = e.currentTarget;
         listener.parentElement.classList.toggle('is-expanded');
     }
-    // credit: https://github.com/jashkenas/underscore/blob/ae037f7c41323807ae6f1533c45512e6d31a1574/underscore.js#L842-L881
     function throttle(func, wait, options) {
         if (options === void 0) { options = {}; }
         var timeout, context, args, result;
@@ -381,30 +315,25 @@
     function loadParams(mainCanvas) {
         var params = new URL(window.location).searchParams;
         params.forEach(function (value, key) {
-            // TODO: should probably expose a better API than accessing mainCanvas.params directly
             value = key === 'bgColor' ? value : Number(value);
             mainCanvas.params[key].setValue(value);
         });
     }
     function getShareURL(mainCanvas) {
         return function () {
-            // set URL and delete any existing params
             var baseURL = new URL(window.location.toString());
             for (var _i = 0, _a = baseURL.searchParams; _i < _a.length; _i++) {
                 var _b = _a[_i], key = _b[0], _ = _b[1];
                 baseURL.searchParams.delete(key);
             }
-            // get new params and append to baseURL searchParams
             var params = mainCanvas.params;
             Object.keys(params).forEach(function (param) {
                 baseURL.searchParams.append(param, round2(params[param].rawValue));
             });
-            // display result to user
             prompt('Copy this URL and send it to someone awesome', baseURL.toString());
         };
     }
 
-    // values must be functions that return a number
     var oscillatorsX = [
         {
             id: 'osc0',
@@ -427,7 +356,6 @@
             display: 'collapse'
         },
         {
-            // based on https://en.wikipedia.org/wiki/Trochoid
             id: 'osc4',
             value: function (t) {
                 var a = 0.5;
@@ -438,13 +366,9 @@
         },
         {
             id: 'osc5',
-            // based on: https://en.wikipedia.org/wiki/Epicycloid
             value: function (t) {
                 var r = 0.2;
-                var k = 3; // number of cusps
-                // var R = k * r;
-                // supposedly either of these two functions should work
-                // return ( (r + R)*Math.cos(t) - r*Math.cos((r + R) / r * t) )
+                var k = 3;
                 return r * (k + 1) * Math.cos(t) - r * Math.cos((k + 1) * t);
             },
             display: 'epicycloid'
@@ -493,7 +417,6 @@
             display: 'collapse'
         },
         {
-            // based on https://en.wikipedia.org/wiki/Trochoid
             id: 'osc14',
             value: function (t) {
                 var a = 0.5;
@@ -504,10 +427,9 @@
         },
         {
             id: 'osc15',
-            // based on: https://en.wikipedia.org/wiki/Epicycloid
             value: function (t) {
                 var r = 0.2;
-                var k = 3; // number of cusps
+                var k = 3;
                 return r * (k + 1) * Math.sin(t) - r * Math.sin((k + 1) * t);
             },
             display: 'epicycloid'
@@ -534,7 +456,6 @@
             display: 'experimental!'
         }
     ];
-    // values must be functions that return functions that return a color
     var lineColors = [
         {
             id: 'colorize',
@@ -553,7 +474,6 @@
         }
     ];
 
-    // credit: https://stackoverflow.com/a/846249
     var LogSlider = (function () {
         function LogSlider(_a) {
             var _b = _a === void 0 ? {} : _a, _c = _b.minpos, minpos = _c === void 0 ? 1 : _c, _d = _b.maxpos, maxpos = _d === void 0 ? 10 : _d, _e = _b.minval, minval = _e === void 0 ? 0.1 : _e, _f = _b.maxval, maxval = _f === void 0 ? 100 : _f;
@@ -564,12 +484,9 @@
             this.scale = (this.maxlval - this.minlval) / (this.maxpos - this.minpos);
         }
         LogSlider.prototype.value = function (position) {
-            // return round2(Math.exp((position - this.minpos) * this.scale + this.minlval));
             return round3(Math.exp((position - this.minpos) * this.scale + this.minlval));
         };
-        // Calculate slider position from a value
         LogSlider.prototype.position = function (value) {
-            // return round2(this.minpos + (Math.log(value) - this.minlval) / this.scale);
             return round3(this.minpos + (Math.log(value) - this.minlval) / this.scale);
         };
         return LogSlider;
@@ -584,16 +501,6 @@
         return IdentityTransformer;
     }());
 
-    // PARAMETERS
-    // ================
-    /**
-     * Parameters control all the variables used in the Drawings to generate an image
-     * Different kinds of parameters manage their data differently, but they share a common interface:
-     *   this.controls is an array of controls that affect the parameter
-     *   this.controlValue is an element to display the current value to the end user
-     *   this.rawValue correlates to the current value in this.controls
-     *   this.value is managed internally and correlates to the actual value used in the Drawing
-     */
     var Parameter = (function () {
         function Parameter(param, ids, rawValueType) {
             this.param = param;
@@ -707,14 +614,7 @@
         };
         SliderParameter.prototype.generate = function () {
             if (this.generateIntegers) {
-                // have to call this.transformer.position here because this is
-                // what we want the final result to be;
-                // internally, this.value is stored as the transformed value
-                var generated = this.transformer.position(Math.pow(
-                // Math.ceil(Math.random() * 10) + (this.chance() ? 1 : -1) * Math.random() / 20, // base
-                Math.ceil(Math.random() * 10) + (this.chance() ? 0.01 : -0.01), // base
-                this.chance() ? -1 : 1 // exponent
-                ));
+                var generated = this.transformer.position(Math.pow(Math.ceil(Math.random() * 10) + (this.chance() ? 0.01 : -0.01), this.chance() ? -1 : 1));
             }
             else if (this.generate1) {
                 var generated = 1;
@@ -730,25 +630,17 @@
             this.animation.isActive = !this.animation.isActive;
             this.animate();
         };
-        // these don't need to be handled synchronously - effects are non-critical
         SliderParameter.prototype.toggleAnimationDirection = function () {
-            return __awaiter(this, void 0, void 0, function* () {
-                this.animation.isIncrementing = !this.animation.isIncrementing;
-            });
+            this.animation.isIncrementing = !this.animation.isIncrementing;
         };
         SliderParameter.prototype.updateAnimationStep = function (e) {
-            return __awaiter(this, void 0, void 0, function* () {
-                this.animation.step = Number(e.target.value);
-            });
+            this.animation.step = Number(e.target.value);
         };
         SliderParameter.prototype.animate = function () {
             if (this.animation.isActive) {
-                // has enough time elapsed to update?
                 this.animation.now = Date.now();
                 this.animation.elapsed = this.animation.now - this.animation.lastRun;
-                // if more time has elapsed than our desired framerate, then draw
                 if (this.animation.elapsed > this.animation.fps) {
-                    // are we incrementing or decrementing?
                     if (this.animation.isIncrementing && this.rawValue >= this.max) {
                         this.animation.isIncrementing = false;
                     }
@@ -760,7 +652,6 @@
                         ? this.rawValue + this.animation.step
                         : this.rawValue - this.animation.step;
                     this.update(this.rawValue).setAttributes();
-                    // set "last run" to "now" minus any additional time that elapsed beyond the desired frame rate
                     this.animation.lastRun =
                         this.animation.now - (this.animation.elapsed % this.animation.fps);
                 }
@@ -771,10 +662,6 @@
     }(Parameter));
     var OptionsParameter = (function (_super) {
         __extends(OptionsParameter, _super);
-        /**
-         * @param {string} param
-         * @param {{id: string, value: function, display: string}[]} options
-         */
         function OptionsParameter(param, options) {
             _super.call(this, param, options.map(function (o) { return o.id; }), 'number');
             this.param = param;
@@ -885,8 +772,6 @@
         return ColorParameter;
     }(Parameter));
 
-    // INITIALIZATION
-    // ==============
     (function init() {
         var mainCanvasID = 'mainCanvas';
         var params = {
@@ -936,9 +821,6 @@
             oscillatorY: new OptionsParameter('oscillatorY', oscillatorsY),
             bgColor: new ColorParameter('bgColor')
         };
-        // instantiate main canvas
-        // mainCanvas = new MainCanvas(mainCanvasID);
-        // Use this if you want MainCanvas to load by default
         var mainCanvas = new MainCanvas(mainCanvasID)
             .setParams(params)
             .setEquations()
@@ -946,10 +828,8 @@
         document.getElementById('mainCanvasControls').classList.remove('hide');
         loadParams(mainCanvas);
         mainCanvas.setParams(params).update();
-        // generate thumbnails
         var refreshParams = refresh(params, mainCanvas);
         document.getElementById('refresh').addEventListener('click', refreshParams);
-        // add toggle functionality
         document.querySelectorAll('.toggler').forEach(function (el) {
             el.addEventListener('click', toggleNextBlock);
         });
@@ -959,7 +839,6 @@
         document
             .getElementById('open-sidebar')
             .addEventListener('click', toggleSidebar);
-        // enable downloading image
         var downloader = document.getElementById('downloadBtn');
         downloader.addEventListener('click', download);
         document.getElementById('shareBtn').addEventListener('click', getShareURL(mainCanvas));

@@ -7,6 +7,9 @@ export default {
     format: 'iife'
   },
   plugins: [
-    typescript()
+    typescript({
+      target: 'es5',
+      removeComments: true
+    })
   ]
 }

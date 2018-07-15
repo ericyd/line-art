@@ -197,11 +197,13 @@ export class SliderParameter extends Parameter {
   }
 
   // these don't need to be handled synchronously - effects are non-critical
-  async toggleAnimationDirection() {
+  // however, typescript compiles these to generator functions which IE seems to not understand.
+  // Since it is a huge performance boost anyway I am removing async to increase compatibility
+  /*async*/ toggleAnimationDirection() {
     this.animation.isIncrementing = !this.animation.isIncrementing;
   }
 
-  async updateAnimationStep(e) {
+  /*async*/ updateAnimationStep(e) {
     this.animation.step = Number(e.target.value);
   }
 
