@@ -176,7 +176,7 @@ export function throttle(func, wait, options = {}) {
 }
 
 export function loadParams(mainCanvas) {
-  const params = new URL(window.location).searchParams;
+  const params = new URL(window.location.toString()).searchParams;
   params.forEach((value, key) => {
     // TODO: should probably expose a better API than accessing mainCanvas.params directly
     value = key === 'bgColor' ? value : Number(value);
@@ -194,7 +194,7 @@ export function getShareURL(mainCanvas) {
     // get new params and append to baseURL searchParams
     const params = mainCanvas.params;
     Object.keys(params).forEach(param => {
-      baseURL.searchParams.append(param, round2(params[param].rawValue));
+      baseURL.searchParams.append(param, params[param].rawValue);
     });
     // display result to user
     prompt('Copy this URL and send it to someone awesome', baseURL.toString());

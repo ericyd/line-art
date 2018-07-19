@@ -3,6 +3,8 @@ import { valToRGBFactory, fixedColorFactory } from './helpers';
 // COLLECTIONS FOR OPTIONPARAMETERS
 // ================
 
+Math.log10 = Math.log10 || function log10(x) { return Math.log(x) / Math.LN10; };
+
 interface Oscillator {
   id: string,
   value: (number) => number,

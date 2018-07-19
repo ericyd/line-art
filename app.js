@@ -315,7 +315,7 @@
         return throttled;
     }
     function loadParams(mainCanvas) {
-        var params = new URL(window.location).searchParams;
+        var params = new URL(window.location.toString()).searchParams;
         params.forEach(function (value, key) {
             value = key === 'bgColor' ? value : Number(value);
             mainCanvas.params[key].setValue(value);
@@ -330,12 +330,13 @@
             }
             var params = mainCanvas.params;
             Object.keys(params).forEach(function (param) {
-                baseURL.searchParams.append(param, round2(params[param].rawValue));
+                baseURL.searchParams.append(param, params[param].rawValue);
             });
             prompt('Copy this URL and send it to someone awesome', baseURL.toString());
         };
     }
 
+    Math.log10 = Math.log10 || function log10(x) { return Math.log(x) / Math.LN10; };
     var oscillatorsX = [
         {
             id: 'osc0',
