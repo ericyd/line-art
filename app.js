@@ -775,6 +775,19 @@
         return ColorParameter;
     }(Parameter));
 
+    function polyfill () {
+        var forEachPolyfill = function (callback, thisArg) {
+            thisArg = thisArg || window;
+            for (var i = 0; i < this.length; i++) {
+                callback.call(thisArg, this[i], i, this);
+            }
+        };
+        if (window.NodeList && !NodeList.prototype.forEach) {
+            NodeList.prototype.forEach = forEachPolyfill;
+        }
+    }
+
+    polyfill();
     (function init() {
         var mainCanvasID = 'mainCanvas';
         var params = {

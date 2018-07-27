@@ -8,6 +8,8 @@ import {
 import { MainCanvas, Thumbnail } from './drawing';
 import { LogSlider } from './transformer';
 import {refresh, loadParams, getShareURL, toggleNextBlock, toggleSidebar, download} from './helpers';
+import polyfill from './polyfill';
+polyfill();
 
 // INITIALIZATION
 // ==============
