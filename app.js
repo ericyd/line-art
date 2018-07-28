@@ -395,7 +395,7 @@
                 }
                 return start / -3;
             },
-            display: 'experimental!'
+            display: 'experimental'
         }
     ];
     var oscillatorsY = [
@@ -456,14 +456,14 @@
                 }
                 return start / -3;
             },
-            display: 'experimental!'
+            display: 'experimental'
         }
     ];
     var lineColors = [
         {
-            id: 'colorize',
+            id: 'colorful',
             value: valToRGBFactory,
-            display: 'colorize'
+            display: 'colorful'
         },
         {
             id: 'white',

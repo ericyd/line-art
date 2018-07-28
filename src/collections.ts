@@ -82,7 +82,7 @@ export const oscillatorsX: Array<Oscillator> = [
       }
       return start / -3;
     },
-    display: 'experimental!'
+    display: 'experimental'
   }
 ];
 
@@ -146,7 +146,7 @@ export const oscillatorsY: Array<Oscillator> = [
       }
       return start / -3;
     },
-    display: 'experimental!'
+    display: 'experimental'
   }
 ];
 
@@ -159,9 +159,9 @@ interface LineColor {
 // values must be functions that return functions that return a color
 export const lineColors: Array<LineColor> = [
   {
-    id: 'colorize',
+    id: 'colorful',
     value: valToRGBFactory,
-    display: 'colorize'
+    display: 'colorful'
   },
 
   {

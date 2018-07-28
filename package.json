@@ -6,7 +6,7 @@
   "scripts": {
     "js": "rollup -c",
     "watch": "rollup -c -w",
-    "css": "node-sass --output-style compressed src/scss/style.scss > style.css",
+    "css": "gulp",
     "build": "npm run js && npm run css"
   },
   "repository": {
@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/ericyd/line-art#readme",
   "devDependencies": {
-    "node-sass": "^4.9.2",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^5.0.0",
+    "gulp-sass": "^4.0.1",
     "rollup": "^0.62.0",
     "rollup-plugin-typescript": "^0.8.1"
   },
