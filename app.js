@@ -680,6 +680,8 @@
                 var el = document.getElementById(option.id);
                 el.dataset.display = option.display;
                 el.value = i;
+                var label = document.querySelector("[for=\"" + option.id + "\"");
+                label.innerText = option.display;
             });
             return this;
         };

@@ -258,6 +258,8 @@ export class OptionsParameter extends Parameter {
       const el = <HTMLInputElement>document.getElementById(option.id);
       el.dataset.display = option.display;
       el.value = i;
+      const label = document.querySelector(`[for="${option.id}"`);
+      label.innerText = option.display;
     });
     return this;
   }
