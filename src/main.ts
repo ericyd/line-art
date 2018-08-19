@@ -44,7 +44,7 @@ polyfill();
     xModDepth: new SliderParameter('xModDepth', {
       min: 1,
       max: 10,
-      step: 0.01,
+      step: 0.001,
       transformer: new LogSlider(),
       generateIntegers: true,
       animationController: 'xModDepth-animate',
@@ -53,7 +53,7 @@ polyfill();
     yModDepth: new SliderParameter('yModDepth', {
       min: 1,
       max: 10,
-      step: 0.01,
+      step: 0.001,
       transformer: new LogSlider(),
       generateIntegers: true,
       animationController: 'yModDepth-animate',

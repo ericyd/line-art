@@ -24,14 +24,10 @@ export class LogSlider implements Transformer {
   }
 
   value(position) {
-    // return round2(Math.exp((position - this.minpos) * this.scale + this.minlval));
-    return round3(
-      Math.exp((position - this.minpos) * this.scale + this.minlval)
-    );
+    return Math.exp((position - this.minpos) * this.scale + this.minlval)
   }
   // Calculate slider position from a value
   position(value) {
-    // return round2(this.minpos + (Math.log(value) - this.minlval) / this.scale);
     return round3(this.minpos + (Math.log(value) - this.minlval) / this.scale);
   }
 }

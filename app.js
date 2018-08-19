@@ -487,7 +487,7 @@
             this.scale = (this.maxlval - this.minlval) / (this.maxpos - this.minpos);
         }
         LogSlider.prototype.value = function (position) {
-            return round3(Math.exp((position - this.minpos) * this.scale + this.minlval));
+            return Math.exp((position - this.minpos) * this.scale + this.minlval);
         };
         LogSlider.prototype.position = function (value) {
             return round3(this.minpos + (Math.log(value) - this.minlval) / this.scale);
@@ -819,7 +819,7 @@
             xModDepth: new SliderParameter('xModDepth', {
                 min: 1,
                 max: 10,
-                step: 0.01,
+                step: 0.001,
                 transformer: new LogSlider(),
                 generateIntegers: true,
                 animationController: 'xModDepth-animate',
@@ -828,7 +828,7 @@
             yModDepth: new SliderParameter('yModDepth', {
                 min: 1,
                 max: 10,
-                step: 0.01,
+                step: 0.001,
                 transformer: new LogSlider(),
                 generateIntegers: true,
                 animationController: 'yModDepth-animate',
