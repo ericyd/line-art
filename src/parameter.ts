@@ -175,10 +175,10 @@ export class SliderParameter extends Parameter {
       // have to call this.transformer.position here because this is
       // what we want the final result to be;
       // internally, this.value is stored as the transformed value
-      var rand = Math.random() * (this.transformer.maxpos - this.transformer.minpos) + this.transformer.minpos;
-      var generated = this.transformer.position(
-        rand
-        );
+      var rand =
+        Math.random() * (this.transformer.maxpos - this.transformer.minpos) +
+        this.transformer.minpos;
+      var generated = this.transformer.position(rand);
     } else if (this.generate1) {
       var generated = 1;
     } else {

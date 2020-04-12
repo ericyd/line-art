@@ -15,6 +15,7 @@
             this.params = {};
             this.radius = Math.max(this.canvas.width, this.canvas.height) / 2.1;
             this.offsetPoint = function (val) { return val + _this.canvas.width / 2; };
+            this.min = Math.PI / 12;
             this.useImageData = false;
             this.imageData = this.ctx.createImageData(this.canvas.width, this.canvas.height);
             return this;
@@ -44,7 +45,7 @@
         };
         Drawing.prototype.drawDotsImageData = function () {
             this.imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-            for (var t = 0; t <= this.max; t += this.increment) {
+            for (var t = this.min; t <= this.max; t += this.increment) {
                 var x = Math.round(this.xScale(t));
                 var y = Math.round(this.yScale(t));
                 var _a = this.getPixelColor(t), r = _a[0], g = _a[1], b = _a[2];
@@ -60,7 +61,7 @@
             return this;
         };
         Drawing.prototype.drawDots = function () {
-            for (var t = 0; t <= this.max; t += this.increment) {
+            for (var t = this.min; t <= this.max; t += this.increment) {
                 var x = this.xScale(t);
                 var y = this.yScale(t);
                 this.ctx.fillStyle = this.getLineColor(t);
@@ -70,7 +71,7 @@
         };
         Drawing.prototype.drawLines = function () {
             this.ctx.lineWidth = this.lineWidth;
-            for (var t = 0; t <= this.max; t += this.increment) {
+            for (var t = this.min; t <= this.max; t += this.increment) {
                 this.ctx.beginPath();
                 this.ctx.moveTo(this.x, this.y);
                 var xTemp = this.xScale(t);
@@ -91,8 +92,8 @@
             this.ctx.strokeStyle = this.getLineColor(0);
             this.ctx.fillStyle = this.getLineColor(0);
             if (this.params.solid.value) {
-                this.x = this.xScale(0);
-                this.y = this.yScale(0);
+                this.x = this.xScale(this.min);
+                this.y = this.yScale(this.min);
                 return this.drawLines();
             }
             else if (this.useImageData) {
@@ -367,7 +368,15 @@
     function loadParams(mainCanvas) {
         var params = new URL(window.location.toString()).searchParams;
         params.forEach(function (value, key) {
-            value = key === "bgColor" ? value : Number(value);
+            if (key === "bgColor") {
+                value = value;
+            }
+            else if (key === "solid") {
+                value = value === "true";
+            }
+            else {
+                value = Number(value);
+            }
             mainCanvas.params[key].setValue(value);
         });
     }

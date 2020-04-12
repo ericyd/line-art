@@ -179,7 +179,13 @@ export function loadParams(mainCanvas) {
   const params = new URL(window.location.toString()).searchParams;
   params.forEach((value, key) => {
     // TODO: should probably expose a better API than accessing mainCanvas.params directly
-    value = key === "bgColor" ? value : Number(value);
+    if (key === "bgColor") {
+      value = value;
+    } else if (key === "solid") {
+      value = value === "true";
+    } else {
+      value = Number(value);
+    }
     mainCanvas.params[key].setValue(value);
   });
 }

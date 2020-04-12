@@ -34,29 +34,34 @@ polyfill();
   const amplitudeConfig = {
     min: 1,
     max: 1000,
-    step: 0.01,
-  }
+    step: 0.1,
+  };
 
   // Phase, not surprisingly, should range between 0 and 2*PI
   const phaseConfig = {
     min: 0.001,
     max: 2 * Math.PI,
-    step: 0.001,
-  }
+    step: 0.01,
+  };
 
   const frequencyConfig = {
     min: 0.1,
     max: 100,
-    step: 0.001,
-  }
+    step: 0.01,
+  };
 
   const dampingConfig = {
     min: 0.01,
     max: 10,
-    step: 0.001,
-    transformer: new LogSlider({ minpos:0.01, maxpos:10, minval: 0.01, maxval: 10 }),
-    generateIntegers: true
-  }
+    step: 0.01,
+    transformer: new LogSlider({
+      minpos: 0.01,
+      maxpos: 10,
+      minval: 0.01,
+      maxval: 10,
+    }),
+    generateIntegers: true,
+  };
 
   var params = {
     solid: new BooleanParameter("solid"),
@@ -100,7 +105,6 @@ polyfill();
     d3: new SliderParameter("d3", dampingConfig),
     d4: new SliderParameter("d4", dampingConfig),
 
-    
     a1: new SliderParameter("a1", amplitudeConfig),
     a2: new SliderParameter("a2", amplitudeConfig),
     a3: new SliderParameter("a3", amplitudeConfig),

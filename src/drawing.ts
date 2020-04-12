@@ -13,6 +13,7 @@ class Drawing {
   xScale: (number) => number;
   yScale: (number) => number;
   max: number;
+  min: number;
   getLineColor: (number) => string;
   getPixelColor: (number) => Array<number>;
   lineWidth: number;
@@ -26,6 +27,9 @@ class Drawing {
     this.params = {};
     this.radius = Math.max(this.canvas.width, this.canvas.height) / 2.1;
     this.offsetPoint = (val) => val + this.canvas.width / 2;
+    // this avoids weird artifacts in the beginning of the formula.
+    // can be taken higher, but may remove interesting pieces of the design
+    this.min = Math.PI / 12;
 
     // TODO: figure out best way to apply lineWidth to pixels drawnn on imageData
     this.useImageData = false;
@@ -80,7 +84,7 @@ class Drawing {
       this.canvas.width,
       this.canvas.height
     );
-    for (let t = 0; t <= this.max; t += this.increment) {
+    for (let t = this.min; t <= this.max; t += this.increment) {
       // if x and y are not rounded, the pixel indexing is very inaccurate (why?)
       var x = Math.round(this.xScale(t));
       var y = Math.round(this.yScale(t));
@@ -98,7 +102,7 @@ class Drawing {
   }
 
   drawDots() {
-    for (let t = 0; t <= this.max; t += this.increment) {
+    for (let t = this.min; t <= this.max; t += this.increment) {
       var x = this.xScale(t); /*  * osc(i / xModDepth) */
       var y = this.yScale(t); /*  * osc(i / yModDepth) */
       this.ctx.fillStyle = this.getLineColor(t);
@@ -109,7 +113,7 @@ class Drawing {
 
   drawLines() {
     this.ctx.lineWidth = this.lineWidth;
-    for (let t = 0; t <= this.max; t += this.increment) {
+    for (let t = this.min; t <= this.max; t += this.increment) {
       this.ctx.beginPath();
       this.ctx.moveTo(this.x, this.y);
       var xTemp = this.xScale(t);
@@ -135,8 +139,8 @@ class Drawing {
     this.ctx.fillStyle = this.getLineColor(0);
 
     if (this.params.solid.value) {
-      this.x = this.xScale(0);
-      this.y = this.yScale(0);
+      this.x = this.xScale(this.min);
+      this.y = this.yScale(this.min);
       return this.drawLines();
     } else if (this.useImageData) {
       return this.drawDotsImageData();
