@@ -1,3 +1,10 @@
+/**
+ * Note: the major difference between this file and main.ts
+ * is that this one has different initialization params,
+ * and it intantiates the Harmonograph class instead of the
+ * MainCanvas class.
+ * The underlying design and use-cases are identical.
+ */
 import { lineColors } from "./collections";
 import {
   SliderParameter,
