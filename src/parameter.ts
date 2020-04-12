@@ -1,5 +1,5 @@
-import { throttle, round2, valToRGBFactory } from './helpers';
-import { Transformer, IdentityTransformer } from './transformer';
+import { throttle, round2, valToRGBFactory } from "./helpers";
+import { Transformer, IdentityTransformer } from "./transformer";
 
 // PARAMETERS
 // ================
@@ -22,7 +22,7 @@ export class Parameter {
   setAttributes: () => Parameter;
   constructor(public param: string, ids, public rawValueType: any) {
     this.events = {};
-    this.controls = ids.map(id => document.getElementById(id));
+    this.controls = ids.map((id) => document.getElementById(id));
     try {
       this.controlValue = document.getElementById(`${param}-value`);
     } catch (e) {
@@ -36,8 +36,8 @@ export class Parameter {
   }
 
   addEventListeners() {
-    this.controls.forEach(control => {
-      control.addEventListener('input', throttle(this.onInput.bind(this), 125));
+    this.controls.forEach((control) => {
+      control.addEventListener("input", throttle(this.onInput.bind(this), 125));
     });
     return this;
   }
@@ -54,7 +54,7 @@ export class Parameter {
 
   onInput(e) {
     this.rawValue =
-      this.rawValueType === 'number' ? Number(e.target.value) : e.target.value;
+      this.rawValueType === "number" ? Number(e.target.value) : e.target.value;
     this.update(this.rawValue);
     return this;
   }
@@ -82,7 +82,7 @@ export class SliderParameter extends Parameter {
   transformer: Transformer;
   generateIntegers: boolean;
   generate1: boolean;
-  animation: { [s: string]: any }
+  animation: { [s: string]: any };
   constructor(
     public param: string,
     {
@@ -93,10 +93,10 @@ export class SliderParameter extends Parameter {
       generateIntegers = false,
       generate1 = false,
       animationController = false,
-      animationStep = 0.01
+      animationStep = 0.01,
     } = {}
   ) {
-    super(param, [param], 'number');
+    super(param, [param], "number");
     this.max = max;
     this.min = min;
     this.step = step;
@@ -113,36 +113,36 @@ export class SliderParameter extends Parameter {
         fps: 1000 / 30,
         step: animationStep || (this.max - this.min) / 50000,
         controller: {
-          run: animationContainer.querySelector('.animation-run-toggle'),
+          run: animationContainer.querySelector(".animation-run-toggle"),
           direction: animationContainer.querySelector(
-            '.animation-direction-toggle'
+            ".animation-direction-toggle"
           ),
-          step: animationContainer.querySelector('.animation-step')
-        }
+          step: animationContainer.querySelector(".animation-step"),
+        },
       };
       this.animate = this.animate.bind(this);
       this.animation.controller.run.addEventListener(
-        'input',
+        "input",
         this.toggleAnimation.bind(this)
       );
       this.animation.controller.direction.addEventListener(
-        'click',
+        "click",
         this.toggleAnimationDirection.bind(this)
       );
       this.animation.controller.step.addEventListener(
-        'input',
+        "input",
         throttle(this.updateAnimationStep.bind(this), 150)
       );
       this.animation.controller.step.setAttribute(
-        'max',
+        "max",
         this.animation.step * 50
       );
       this.animation.controller.step.setAttribute(
-        'min',
+        "min",
         this.animation.step / 10
       );
-      this.animation.controller.step.setAttribute('step', this.animation.step);
-      this.animation.controller.step.setAttribute('value', this.animation.step);
+      this.animation.controller.step.setAttribute("step", this.animation.step);
+      this.animation.controller.step.setAttribute("value", this.animation.step);
     }
 
     this.generate()
@@ -153,10 +153,10 @@ export class SliderParameter extends Parameter {
   }
 
   setAttributes() {
-    this.controls[0].setAttribute('value', this.rawValue);
-    this.controls[0].setAttribute('step', String(this.step));
-    this.controls[0].setAttribute('max', String(this.max));
-    this.controls[0].setAttribute('min', String(this.min));
+    this.controls[0].setAttribute("value", this.rawValue);
+    this.controls[0].setAttribute("step", String(this.step));
+    this.controls[0].setAttribute("max", String(this.max));
+    this.controls[0].setAttribute("min", String(this.min));
     return this;
   }
 
@@ -164,7 +164,7 @@ export class SliderParameter extends Parameter {
     this.value = this.transformer.value(Number(value));
     this.updateDisplay(round2(this.value));
     if (emit) {
-      this.emit('update');
+      this.emit("update");
     }
     return this;
   }
@@ -244,7 +244,11 @@ export class OptionsParameter extends Parameter {
    * @param {{id: string, value: function, display: string}[]} options
    */
   constructor(public param: string, options) {
-    super(param, options.map(o => o.id), 'number');
+    super(
+      param,
+      options.map((o) => o.id),
+      "number"
+    );
     this.options = options;
     this.generate()
       .addEventListeners()
@@ -269,13 +273,13 @@ export class OptionsParameter extends Parameter {
     this.value = this.option.value;
     this.updateDisplay.call(this, this.option.display);
     if (emit) {
-      this.emit('update');
+      this.emit("update");
     }
     return this;
   }
 
   updateDisplay(value) {
-    document.getElementById(this.option.id).checked = 'checked';
+    document.getElementById(this.option.id).checked = "checked";
     this.controlValue.innerText = value;
     return this;
   }
@@ -292,9 +296,7 @@ export class OptionsParameter extends Parameter {
 export class BooleanParameter extends Parameter {
   constructor(public param: string) {
     super(param, [param]);
-    this.generate()
-      .addEventListeners()
-      .updateDisplay(this.value);
+    this.generate().addEventListeners().updateDisplay(this.value);
     return this;
   }
 
@@ -308,7 +310,7 @@ export class BooleanParameter extends Parameter {
     this.value = Boolean(value);
     this.updateDisplay(this.value);
     if (emit) {
-      this.emit('update');
+      this.emit("update");
     }
     return this;
   }
@@ -335,21 +337,21 @@ export class ColorParameter extends Parameter {
   }
 
   setAttributes() {
-    this.controls[0].setAttribute('value', this.rawValue);
+    this.controls[0].setAttribute("value", this.rawValue);
     return this;
   }
 
   update(value, emit = true) {
     this.value = value;
     if (emit) {
-      this.emit('update');
+      this.emit("update");
     }
     return this;
   }
 
   generate() {
     // always start with black
-    this.rawValue = this.value = '#000000';
+    this.rawValue = this.value = "#000000";
     return this;
   }
 }

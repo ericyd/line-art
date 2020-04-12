@@ -2,7 +2,7 @@ export default () => {
   const forEachPolyfill = function (callback, thisArg) {
     thisArg = thisArg || window;
     for (var i = 0; i < this.length; i++) {
-        callback.call(thisArg, this[i], i, this);
+      callback.call(thisArg, this[i], i, this);
     }
   };
 

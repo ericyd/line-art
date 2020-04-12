@@ -1,10 +1,10 @@
-import { Thumbnail } from './drawing';
+import { Thumbnail } from "./drawing";
 
 // HELPER FUNCTIONS
 // ================
 
-const roundN = decimals => {
-  return val => {
+const roundN = (decimals) => {
+  return (val) => {
     if (isNaN(val)) return val;
     try {
       return Math.round(val * Math.pow(10, decimals)) / Math.pow(10, decimals);
@@ -20,7 +20,7 @@ export const round3 = roundN(3);
 
 export function toHex(value) {
   if (value > 255 || value < 0) {
-    throw new Error('Please use an 8-bit value');
+    throw new Error("Please use an 8-bit value");
   }
   return Math.round(value).toString(16);
 }
@@ -47,19 +47,19 @@ export function valToRGBFactory(
   {
     fixEdges = false, // show black @ nMin and white @ nMax
     returnHex = false, // return 6-digit hex value in form #000000
-    returnChannels = false // returns an array of the raw r, g, b values
+    returnChannels = false, // returns an array of the raw r, g, b values
   } = {}
 ) {
-  return function(n) {
+  return function (n) {
     if (n < nMin || n > nMax) {
-      throw new Error('n must satisfy ' + nMin + ' <= n <= ' + nMax);
+      throw new Error("n must satisfy " + nMin + " <= n <= " + nMax);
     }
     if (fixEdges) {
       if (n == nMax) {
-        return '#FFFFFF';
+        return "#FFFFFF";
       }
       if (n == nMin) {
-        return '#000000';
+        return "#000000";
       }
     }
     var n6th = (nMax - nMin) / 6;
@@ -69,10 +69,10 @@ export function valToRGBFactory(
     var min = 90;
     var max = 212;
     var range = max - min;
-    var period = offset => (2 * Math.PI * offset) / nMax;
-    var clip = x => (x < min ? min : x > max ? max : x);
-    var rangeAdjust = x => x * range + min + range / 2;
-    var channel = offset => x =>
+    var period = (offset) => (2 * Math.PI * offset) / nMax;
+    var clip = (x) => (x < min ? min : x > max ? max : x);
+    var rangeAdjust = (x) => x * range + min + range / 2;
+    var channel = (offset) => (x) =>
       clip(rangeAdjust(Math.sin(x * period(1) + period(offset))));
     // the offset math is a bit opaque to me, but it works
     var r = channel(n6th * 2 - n12th);
@@ -98,7 +98,7 @@ export function fixedColorFactory(color) {
   return (_, __, { returnChannels = false } = {}) => {
     return () => {
       if (returnChannels) {
-        if (color.slice(1, 2) === 'F') {
+        if (color.slice(1, 2) === "F") {
           return [255, 255, 255];
         }
         return [0, 0, 0];
@@ -109,29 +109,29 @@ export function fixedColorFactory(color) {
 }
 
 export function download(e, id) {
-  e.target.download = 'image.png';
+  e.target.download = "image.png";
   e.target.href = document
     .getElementById(id)
-    .toDataURL('image/png')
-    .replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+    .toDataURL("image/png")
+    .replace(/^data:image\/[^;]/, "data:application/octet-stream");
 }
 
 export function refresh(params, mainCanvas) {
   return () => {
-    document.querySelectorAll('.sidebar__thumb').forEach((el, i) => {
+    document.querySelectorAll(".sidebar__thumb").forEach((el, i) => {
       new Thumbnail(el.id, mainCanvas).setParams(params, true).update();
     });
   };
 }
 
 export function toggleSidebar(e) {
-  document.getElementById('sidebar').classList.toggle('collapsed');
-  document.getElementById('sidebar').classList.toggle('expanded');
+  document.getElementById("sidebar").classList.toggle("collapsed");
+  document.getElementById("sidebar").classList.toggle("expanded");
 }
 
 export function toggleNextBlock(e) {
   var listener = e.currentTarget;
-  listener.parentElement.classList.toggle('is-expanded');
+  listener.parentElement.classList.toggle("is-expanded");
 }
 
 // credit: https://github.com/jashkenas/underscore/blob/ae037f7c41323807ae6f1533c45512e6d31a1574/underscore.js#L842-L881
@@ -139,14 +139,14 @@ export function throttle(func, wait, options = {}) {
   var timeout, context, args, result;
   var previous = 0;
 
-  var later = function() {
+  var later = function () {
     previous = options.leading === false ? 0 : Date.now();
     timeout = null;
     result = func.apply(context, args);
     if (!timeout) context = args = null;
   };
 
-  var throttled = function() {
+  var throttled = function () {
     var now = Date.now();
     if (!previous && options.leading === false) previous = now;
     var remaining = wait - (now - previous);
@@ -166,7 +166,7 @@ export function throttle(func, wait, options = {}) {
     return result;
   };
 
-  throttled.cancel = function() {
+  throttled.cancel = function () {
     clearTimeout(timeout);
     previous = 0;
     timeout = context = args = null;
@@ -179,7 +179,7 @@ export function loadParams(mainCanvas) {
   const params = new URL(window.location.toString()).searchParams;
   params.forEach((value, key) => {
     // TODO: should probably expose a better API than accessing mainCanvas.params directly
-    value = key === 'bgColor' ? value : Number(value);
+    value = key === "bgColor" ? value : Number(value);
     mainCanvas.params[key].setValue(value);
   });
 }
@@ -193,10 +193,10 @@ export function getShareURL(mainCanvas) {
     }
     // get new params and append to baseURL searchParams
     const params = mainCanvas.params;
-    Object.keys(params).forEach(param => {
+    Object.keys(params).forEach((param) => {
       baseURL.searchParams.append(param, params[param].rawValue);
     });
     // display result to user
-    prompt('Copy this URL and send it to someone awesome', baseURL.toString());
+    prompt("Copy this URL and send it to someone awesome", baseURL.toString());
   };
 }

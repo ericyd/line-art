@@ -11,7 +11,7 @@
         function Drawing(canvasID) {
             var _this = this;
             this.canvas = document.getElementById(canvasID);
-            this.ctx = this.canvas.getContext('2d');
+            this.ctx = this.canvas.getContext("2d");
             this.params = {};
             this.radius = Math.max(this.canvas.width, this.canvas.height) / 2.1;
             this.offsetPoint = function (val) { return val + _this.canvas.width / 2; };
@@ -24,15 +24,15 @@
             var y = event.layerY;
             var pixel = this.ctx.getImageData(x, y, 1, 1);
             var data = pixel.data;
-            var rgba1 = 'rgba(' +
+            var rgba1 = "rgba(" +
                 data[0] +
-                ', ' +
+                ", " +
                 data[1] +
-                ', ' +
+                ", " +
                 data[2] +
-                ', ' +
+                ", " +
                 data[3] +
-                ')';
+                ")";
             console.log(rgba1);
         };
         Drawing.prototype.drawPixel = function (x, y, r, g, b, a) {
@@ -120,7 +120,7 @@
             this.max = Math.PI * this.params.len.value;
             this.getLineColor = this.params.lineColor.value(this.max, 0);
             this.getPixelColor = this.params.lineColor.value(this.max, 0, {
-                returnChannels: true
+                returnChannels: true,
             });
             this.lineWidth = this.params.width.value;
             this.increment = 1 / this.params.resolution.value;
@@ -133,12 +133,12 @@
         function Thumbnail(canvasID, mainCanvas) {
             _super.call(this, canvasID);
             this.mainCanvas = mainCanvas;
-            this.canvas.addEventListener('click', this.onClick.bind(this));
+            this.canvas.addEventListener("click", this.onClick.bind(this));
             this.values = {};
         }
         Thumbnail.prototype.onClick = function (e) {
             var _this = this;
-            document.getElementById('mainCanvasControls').classList.remove('hide');
+            document.getElementById("mainCanvasControls").classList.remove("hide");
             Object.keys(this.params).forEach(function (key) {
                 var param = _this.params[key];
                 param.setValue(_this.values[param.param]);
@@ -171,7 +171,7 @@
             var _this = this;
             Object.keys(params).forEach(function (key) {
                 var param = params[key];
-                param.on('update', _this.update.bind(_this));
+                param.on("update", _this.update.bind(_this));
             });
             this.params = params;
             return this;
@@ -202,15 +202,25 @@
             this.d3 = this.params.d3.value;
             this.d4 = this.params.d4.value;
             this.xScale = function (t) {
-                return _this.offsetPoint(_this.a1 * Math.sin(t * _this.f1 + _this.p1) * Math.pow(Math.E, (-_this.d1 * t)) + _this.a2 * Math.sin(t * _this.f2 + _this.p2) * Math.pow(Math.E, (-_this.d2 * t)));
+                return _this.offsetPoint(_this.a1 *
+                    Math.sin(t * _this.f1 + _this.p1) *
+                    Math.pow(Math.E, -_this.d1 * t) +
+                    _this.a2 *
+                        Math.sin(t * _this.f2 + _this.p2) *
+                        Math.pow(Math.E, -_this.d2 * t));
             };
             this.yScale = function (t) {
-                return _this.offsetPoint(_this.a3 * Math.sin(t * _this.f3 + _this.p3) * Math.pow(Math.E, (-_this.d3 * t)) + _this.a4 * Math.sin(t * _this.f4 + _this.p4) * Math.pow(Math.E, (-_this.d4 * t)));
+                return _this.offsetPoint(_this.a3 *
+                    Math.sin(t * _this.f3 + _this.p3) *
+                    Math.pow(Math.E, -_this.d3 * t) +
+                    _this.a4 *
+                        Math.sin(t * _this.f4 + _this.p4) *
+                        Math.pow(Math.E, -_this.d4 * t));
             };
             this.max = Math.PI * this.params.len.value;
             this.getLineColor = this.params.lineColor.value(this.max, 0);
             this.getPixelColor = this.params.lineColor.value(this.max, 0, {
-                returnChannels: true
+                returnChannels: true,
             });
             this.lineWidth = this.params.width.value;
             this.increment = 1 / this.params.resolution.value;
@@ -235,7 +245,7 @@
     var round3 = roundN(3);
     function toHex(value) {
         if (value > 255 || value < 0) {
-            throw new Error('Please use an 8-bit value');
+            throw new Error("Please use an 8-bit value");
         }
         return Math.round(value).toString(16);
     }
@@ -245,14 +255,14 @@
         var _b = _a === void 0 ? {} : _a, _c = _b.fixEdges, fixEdges = _c === void 0 ? false : _c, _d = _b.returnHex, returnHex = _d === void 0 ? false : _d, _e = _b.returnChannels, returnChannels = _e === void 0 ? false : _e;
         return function (n) {
             if (n < nMin || n > nMax) {
-                throw new Error('n must satisfy ' + nMin + ' <= n <= ' + nMax);
+                throw new Error("n must satisfy " + nMin + " <= n <= " + nMax);
             }
             if (fixEdges) {
                 if (n == nMax) {
-                    return '#FFFFFF';
+                    return "#FFFFFF";
                 }
                 if (n == nMin) {
-                    return '#000000';
+                    return "#000000";
                 }
             }
             var n6th = (nMax - nMin) / 6;
@@ -283,7 +293,7 @@
             var _b = (_a === void 0 ? {} : _a).returnChannels, returnChannels = _b === void 0 ? false : _b;
             return function () {
                 if (returnChannels) {
-                    if (color.slice(1, 2) === 'F') {
+                    if (color.slice(1, 2) === "F") {
                         return [255, 255, 255];
                     }
                     return [0, 0, 0];
@@ -293,26 +303,26 @@
         };
     }
     function download(e, id) {
-        e.target.download = 'image.png';
+        e.target.download = "image.png";
         e.target.href = document
             .getElementById(id)
-            .toDataURL('image/png')
-            .replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+            .toDataURL("image/png")
+            .replace(/^data:image\/[^;]/, "data:application/octet-stream");
     }
     function refresh(params, mainCanvas) {
         return function () {
-            document.querySelectorAll('.sidebar__thumb').forEach(function (el, i) {
+            document.querySelectorAll(".sidebar__thumb").forEach(function (el, i) {
                 new Thumbnail(el.id, mainCanvas).setParams(params, true).update();
             });
         };
     }
     function toggleSidebar(e) {
-        document.getElementById('sidebar').classList.toggle('collapsed');
-        document.getElementById('sidebar').classList.toggle('expanded');
+        document.getElementById("sidebar").classList.toggle("collapsed");
+        document.getElementById("sidebar").classList.toggle("expanded");
     }
     function toggleNextBlock(e) {
         var listener = e.currentTarget;
-        listener.parentElement.classList.toggle('is-expanded');
+        listener.parentElement.classList.toggle("is-expanded");
     }
     function throttle(func, wait, options) {
         if (options === void 0) { options = {}; }
@@ -357,7 +367,7 @@
     function loadParams(mainCanvas) {
         var params = new URL(window.location.toString()).searchParams;
         params.forEach(function (value, key) {
-            value = key === 'bgColor' ? value : Number(value);
+            value = key === "bgColor" ? value : Number(value);
             mainCanvas.params[key].setValue(value);
         });
     }
@@ -372,62 +382,66 @@
             Object.keys(params).forEach(function (param) {
                 baseURL.searchParams.append(param, params[param].rawValue);
             });
-            prompt('Copy this URL and send it to someone awesome', baseURL.toString());
+            prompt("Copy this URL and send it to someone awesome", baseURL.toString());
         };
     }
 
-    Math.log10 = Math.log10 || function log10(x) { return Math.log(x) / Math.LN10; };
+    Math.log10 =
+        Math.log10 ||
+            function log10(x) {
+                return Math.log(x) / Math.LN10;
+            };
     var oscillatorsX = [
         {
-            id: 'osc0',
+            id: "osc0",
             value: function (t) { return Math.sin(t); },
-            display: 'sine'
+            display: "sine",
         },
         {
-            id: 'osc1',
+            id: "osc1",
             value: function (t) { return Math.cos(t); },
-            display: 'cosine'
+            display: "cosine",
         },
         {
-            id: 'osc2',
+            id: "osc2",
             value: function (t) { return (Math.sin(t) + 1) / 2; },
-            display: 'half-sine'
+            display: "half-sine",
         },
         {
-            id: 'osc3',
+            id: "osc3",
             value: function (t) { return Math.sin(t) * Math.pow(t, -0.35); },
-            display: 'collapse'
+            display: "collapse",
         },
         {
-            id: 'osc4',
+            id: "osc4",
             value: function (t) {
                 var a = 0.5;
                 var b = 0.5;
                 return a - b * Math.sin(t);
             },
-            display: 'trochoid'
+            display: "trochoid",
         },
         {
-            id: 'osc5',
+            id: "osc5",
             value: function (t) {
                 var r = 0.2;
                 var k = 3;
                 return r * (k + 1) * Math.cos(t) - r * Math.cos((k + 1) * t);
             },
-            display: 'epicycloid'
+            display: "epicycloid",
         },
         {
-            id: 'osc6',
+            id: "osc6",
             value: function (t) { return Math.sin(Math.cos(Math.log10(t))); },
-            display: 'log periodic'
+            display: "log periodic",
         },
         {
-            id: 'osc7',
+            id: "osc7",
             value: function (t) { return Math.abs(Math.sin(t / 10)); },
-            display: 'absolute'
+            display: "absolute",
         },
         {
-            id: 'osc8',
+            id: "osc8",
             value: function (t) {
                 var start = Math.sin(t);
                 if (start > 0.5) {
@@ -435,60 +449,60 @@
                 }
                 return start / -3;
             },
-            display: 'experimental'
-        }
+            display: "experimental",
+        },
     ];
     var oscillatorsY = [
         {
-            id: 'osc10',
+            id: "osc10",
             value: function (t) { return Math.sin(t); },
-            display: 'sine'
+            display: "sine",
         },
         {
-            id: 'osc11',
+            id: "osc11",
             value: function (t) { return Math.cos(t); },
-            display: 'cosine'
+            display: "cosine",
         },
         {
-            id: 'osc12',
+            id: "osc12",
             value: function (t) { return (Math.sin(t) + 1) / 2; },
-            display: 'half-sine'
+            display: "half-sine",
         },
         {
-            id: 'osc13',
+            id: "osc13",
             value: function (t) { return Math.sin(t) * Math.pow(t, -0.35); },
-            display: 'collapse'
+            display: "collapse",
         },
         {
-            id: 'osc14',
+            id: "osc14",
             value: function (t) {
                 var a = 0.5;
                 var b = 0.5;
                 return a - b * Math.cos(t);
             },
-            display: 'trochoid'
+            display: "trochoid",
         },
         {
-            id: 'osc15',
+            id: "osc15",
             value: function (t) {
                 var r = 0.2;
                 var k = 3;
                 return r * (k + 1) * Math.sin(t) - r * Math.sin((k + 1) * t);
             },
-            display: 'epicycloid'
+            display: "epicycloid",
         },
         {
-            id: 'osc16',
+            id: "osc16",
             value: function (t) { return Math.sin(Math.cos(Math.log10(t))); },
-            display: 'log periodic'
+            display: "log periodic",
         },
         {
-            id: 'osc17',
+            id: "osc17",
             value: function (t) { return Math.abs(Math.sin(t / 10)); },
-            display: 'absolute'
+            display: "absolute",
         },
         {
-            id: 'osc18',
+            id: "osc18",
             value: function (t) {
                 var start = Math.sin(t);
                 if (start > 0.5) {
@@ -496,25 +510,25 @@
                 }
                 return start / -3;
             },
-            display: 'experimental'
-        }
+            display: "experimental",
+        },
     ];
     var lineColors = [
         {
-            id: 'colorful',
+            id: "colorful",
             value: valToRGBFactory,
-            display: 'colorful'
+            display: "colorful",
         },
         {
-            id: 'white',
-            value: fixedColorFactory('#FFFFFF'),
-            display: 'white'
+            id: "white",
+            value: fixedColorFactory("#FFFFFF"),
+            display: "white",
         },
         {
-            id: 'black',
-            value: fixedColorFactory('#000000'),
-            display: 'black'
-        }
+            id: "black",
+            value: fixedColorFactory("#000000"),
+            display: "black",
+        },
     ];
 
     var LogSlider = (function () {
@@ -564,7 +578,7 @@
         Parameter.prototype.addEventListeners = function () {
             var _this = this;
             this.controls.forEach(function (control) {
-                control.addEventListener('input', throttle(_this.onInput.bind(_this), 125));
+                control.addEventListener("input", throttle(_this.onInput.bind(_this), 125));
             });
             return this;
         };
@@ -578,7 +592,7 @@
         };
         Parameter.prototype.onInput = function (e) {
             this.rawValue =
-                this.rawValueType === 'number' ? Number(e.target.value) : e.target.value;
+                this.rawValueType === "number" ? Number(e.target.value) : e.target.value;
             this.update(this.rawValue);
             return this;
         };
@@ -601,7 +615,7 @@
         __extends(SliderParameter, _super);
         function SliderParameter(param, _a) {
             var _b = _a === void 0 ? {} : _a, _c = _b.min, min = _c === void 0 ? 1 : _c, _d = _b.max, max = _d === void 0 ? 10 : _d, _e = _b.step, step = _e === void 0 ? 0.1 : _e, _f = _b.transformer, transformer = _f === void 0 ? new IdentityTransformer() : _f, _g = _b.generateIntegers, generateIntegers = _g === void 0 ? false : _g, _h = _b.generate1, generate1 = _h === void 0 ? false : _h, _j = _b.animationController, animationController = _j === void 0 ? false : _j, _k = _b.animationStep, animationStep = _k === void 0 ? 0.01 : _k;
-            _super.call(this, param, [param], 'number');
+            _super.call(this, param, [param], "number");
             this.param = param;
             this.max = max;
             this.min = min;
@@ -619,19 +633,19 @@
                     fps: 1000 / 30,
                     step: animationStep || (this.max - this.min) / 50000,
                     controller: {
-                        run: animationContainer.querySelector('.animation-run-toggle'),
-                        direction: animationContainer.querySelector('.animation-direction-toggle'),
-                        step: animationContainer.querySelector('.animation-step')
-                    }
+                        run: animationContainer.querySelector(".animation-run-toggle"),
+                        direction: animationContainer.querySelector(".animation-direction-toggle"),
+                        step: animationContainer.querySelector(".animation-step"),
+                    },
                 };
                 this.animate = this.animate.bind(this);
-                this.animation.controller.run.addEventListener('input', this.toggleAnimation.bind(this));
-                this.animation.controller.direction.addEventListener('click', this.toggleAnimationDirection.bind(this));
-                this.animation.controller.step.addEventListener('input', throttle(this.updateAnimationStep.bind(this), 150));
-                this.animation.controller.step.setAttribute('max', this.animation.step * 50);
-                this.animation.controller.step.setAttribute('min', this.animation.step / 10);
-                this.animation.controller.step.setAttribute('step', this.animation.step);
-                this.animation.controller.step.setAttribute('value', this.animation.step);
+                this.animation.controller.run.addEventListener("input", this.toggleAnimation.bind(this));
+                this.animation.controller.direction.addEventListener("click", this.toggleAnimationDirection.bind(this));
+                this.animation.controller.step.addEventListener("input", throttle(this.updateAnimationStep.bind(this), 150));
+                this.animation.controller.step.setAttribute("max", this.animation.step * 50);
+                this.animation.controller.step.setAttribute("min", this.animation.step / 10);
+                this.animation.controller.step.setAttribute("step", this.animation.step);
+                this.animation.controller.step.setAttribute("value", this.animation.step);
             }
             this.generate()
                 .addEventListeners()
@@ -640,10 +654,10 @@
             return this;
         }
         SliderParameter.prototype.setAttributes = function () {
-            this.controls[0].setAttribute('value', this.rawValue);
-            this.controls[0].setAttribute('step', String(this.step));
-            this.controls[0].setAttribute('max', String(this.max));
-            this.controls[0].setAttribute('min', String(this.min));
+            this.controls[0].setAttribute("value", this.rawValue);
+            this.controls[0].setAttribute("step", String(this.step));
+            this.controls[0].setAttribute("max", String(this.max));
+            this.controls[0].setAttribute("min", String(this.min));
             return this;
         };
         SliderParameter.prototype.update = function (value, emit) {
@@ -651,7 +665,7 @@
             this.value = this.transformer.value(Number(value));
             this.updateDisplay(round2(this.value));
             if (emit) {
-                this.emit('update');
+                this.emit("update");
             }
             return this;
         };
@@ -706,7 +720,7 @@
     var OptionsParameter = (function (_super) {
         __extends(OptionsParameter, _super);
         function OptionsParameter(param, options) {
-            _super.call(this, param, options.map(function (o) { return o.id; }), 'number');
+            _super.call(this, param, options.map(function (o) { return o.id; }), "number");
             this.param = param;
             this.options = options;
             this.generate()
@@ -731,12 +745,12 @@
             this.value = this.option.value;
             this.updateDisplay.call(this, this.option.display);
             if (emit) {
-                this.emit('update');
+                this.emit("update");
             }
             return this;
         };
         OptionsParameter.prototype.updateDisplay = function (value) {
-            document.getElementById(this.option.id).checked = 'checked';
+            document.getElementById(this.option.id).checked = "checked";
             this.controlValue.innerText = value;
             return this;
         };
@@ -753,9 +767,7 @@
         function BooleanParameter(param) {
             _super.call(this, param, [param]);
             this.param = param;
-            this.generate()
-                .addEventListeners()
-                .updateDisplay(this.value);
+            this.generate().addEventListeners().updateDisplay(this.value);
             return this;
         }
         BooleanParameter.prototype.onInput = function (e) {
@@ -768,7 +780,7 @@
             this.value = Boolean(value);
             this.updateDisplay(this.value);
             if (emit) {
-                this.emit('update');
+                this.emit("update");
             }
             return this;
         };
@@ -794,19 +806,19 @@
             return this;
         }
         ColorParameter.prototype.setAttributes = function () {
-            this.controls[0].setAttribute('value', this.rawValue);
+            this.controls[0].setAttribute("value", this.rawValue);
             return this;
         };
         ColorParameter.prototype.update = function (value, emit) {
             if (emit === void 0) { emit = true; }
             this.value = value;
             if (emit) {
-                this.emit('update');
+                this.emit("update");
             }
             return this;
         };
         ColorParameter.prototype.generate = function () {
-            this.rawValue = this.value = '#000000';
+            this.rawValue = this.value = "#000000";
             return this;
         };
         return ColorParameter;
@@ -826,81 +838,86 @@
 
     polyfill();
     (function init() {
-        var mainCanvasID = 'mainCanvas';
+        var mainCanvasID = "mainCanvas";
         var params = {
-            solid: new BooleanParameter('solid'),
-            resolution: new SliderParameter('resolution', {
+            solid: new BooleanParameter("solid"),
+            resolution: new SliderParameter("resolution", {
                 min: 20,
                 max: 100,
                 step: 0.1,
-                animationController: 'resolution-animate',
-                animationStep: 1 / 5000
+                animationController: "resolution-animate",
+                animationStep: 1 / 5000,
             }),
-            len: new SliderParameter('len', {
+            len: new SliderParameter("len", {
                 min: 1,
                 max: 60,
                 step: 0.1,
-                animationController: 'len-animate',
-                animationStep: 1 / 1000
+                animationController: "len-animate",
+                animationStep: 1 / 1000,
             }),
-            width: new SliderParameter('width', {
+            width: new SliderParameter("width", {
                 min: 1,
                 max: 10,
                 step: 0.1,
                 generate1: true,
-                animationController: 'width-animate',
-                animationStep: 1 / 1000
+                animationController: "width-animate",
+                animationStep: 1 / 1000,
             }),
-            xModDepth: new SliderParameter('xModDepth', {
+            xModDepth: new SliderParameter("xModDepth", {
                 min: 1,
                 max: 10,
                 step: 0.001,
                 transformer: new LogSlider(),
                 generateIntegers: true,
-                animationController: 'xModDepth-animate',
-                animationStep: 1 / 10000
+                animationController: "xModDepth-animate",
+                animationStep: 1 / 10000,
             }),
-            yModDepth: new SliderParameter('yModDepth', {
+            yModDepth: new SliderParameter("yModDepth", {
                 min: 1,
                 max: 10,
                 step: 0.001,
                 transformer: new LogSlider(),
                 generateIntegers: true,
-                animationController: 'yModDepth-animate',
-                animationStep: 1 / 10000
+                animationController: "yModDepth-animate",
+                animationStep: 1 / 10000,
             }),
-            lineColor: new OptionsParameter('lineColor', lineColors),
-            oscillatorX: new OptionsParameter('oscillatorX', oscillatorsX),
-            oscillatorY: new OptionsParameter('oscillatorY', oscillatorsY),
-            bgColor: new ColorParameter('bgColor')
+            lineColor: new OptionsParameter("lineColor", lineColors),
+            oscillatorX: new OptionsParameter("oscillatorX", oscillatorsX),
+            oscillatorY: new OptionsParameter("oscillatorY", oscillatorsY),
+            bgColor: new ColorParameter("bgColor"),
         };
         var mainCanvas = new MainCanvas(mainCanvasID)
             .setParams(params)
             .setEquations()
             .draw();
-        document.getElementById('mainCanvasControls').classList.remove('hide');
+        document.getElementById("mainCanvasControls").classList.remove("hide");
         loadParams(mainCanvas);
         mainCanvas.setParams(params).update();
         var refreshParams = refresh(params, mainCanvas);
-        document.getElementById('refresh').addEventListener('click', refreshParams);
-        document.querySelectorAll('.toggler').forEach(function (el) {
-            el.addEventListener('click', toggleNextBlock);
+        document.getElementById("refresh").addEventListener("click", refreshParams);
+        document.querySelectorAll(".toggler").forEach(function (el) {
+            el.addEventListener("click", toggleNextBlock);
         });
         document
-            .getElementById('close-sidebar')
-            .addEventListener('click', toggleSidebar);
+            .getElementById("close-sidebar")
+            .addEventListener("click", toggleSidebar);
         document
-            .getElementById('open-sidebar')
-            .addEventListener('click', toggleSidebar);
-        var downloader = document.getElementById('downloadBtn');
-        document.getElementById('downloadBtn').addEventListener('click', function (e) {
-            download(e, 'mainCanvas');
+            .getElementById("open-sidebar")
+            .addEventListener("click", toggleSidebar);
+        var downloader = document.getElementById("downloadBtn");
+        document.getElementById("downloadBtn").addEventListener("click", function (e) {
+            download(e, "mainCanvas");
         });
-        document.getElementById('downloadBtnHiRes').addEventListener('click', function (e) {
-            new Thumbnail('downloadCanvas', mainCanvas).setParams(params, false).setEquations().draw();
-            download(e, 'downloadCanvas');
+        document.getElementById("downloadBtnHiRes").addEventListener("click", function (e) {
+            new Thumbnail("downloadCanvas", mainCanvas)
+                .setParams(params, false)
+                .setEquations()
+                .draw();
+            download(e, "downloadCanvas");
         });
-        document.getElementById('shareBtn').addEventListener('click', getShareURL(mainCanvas));
+        document
+            .getElementById("shareBtn")
+            .addEventListener("click", getShareURL(mainCanvas));
     })();
 
 }());

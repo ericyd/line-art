@@ -1,4 +1,4 @@
-import { Parameter } from './parameter';
+import { Parameter } from "./parameter";
 
 // DRAWINGS
 // ================
@@ -22,10 +22,10 @@ class Drawing {
   y: number;
   constructor(canvasID) {
     this.canvas = <HTMLCanvasElement>document.getElementById(canvasID);
-    this.ctx = this.canvas.getContext('2d');
+    this.ctx = this.canvas.getContext("2d");
     this.params = {};
     this.radius = Math.max(this.canvas.width, this.canvas.height) / 2.1;
-    this.offsetPoint = val => val + this.canvas.width / 2;
+    this.offsetPoint = (val) => val + this.canvas.width / 2;
 
     // TODO: figure out best way to apply lineWidth to pixels drawnn on imageData
     this.useImageData = false;
@@ -45,15 +45,15 @@ class Drawing {
     var pixel = this.ctx.getImageData(x, y, 1, 1);
     var data = pixel.data;
     var rgba1 =
-      'rgba(' +
+      "rgba(" +
       data[0] +
-      ', ' +
+      ", " +
       data[1] +
-      ', ' +
+      ", " +
       data[2] +
-      ', ' +
+      ", " +
       data[3] +
-      ')';
+      ")";
     console.log(rgba1);
   }
 
@@ -99,8 +99,8 @@ class Drawing {
 
   drawDots() {
     for (let t = 0; t <= this.max; t += this.increment) {
-      var x = this.xScale(t) /*  * osc(i / xModDepth) */;
-      var y = this.yScale(t) /*  * osc(i / yModDepth) */;
+      var x = this.xScale(t); /*  * osc(i / xModDepth) */
+      var y = this.yScale(t); /*  * osc(i / yModDepth) */
       this.ctx.fillStyle = this.getLineColor(t);
       this.ctx.fillRect(x, y, this.lineWidth, this.lineWidth);
     }
@@ -154,13 +154,13 @@ class Drawing {
    * Must set params before calling
    */
   setEquations() {
-    this.xScale = t =>
+    this.xScale = (t) =>
       this.offsetPoint(
         Math.sin(t) *
           this.radius *
           this.params.oscillatorY.value(t * this.params.xModDepth.value)
       );
-    this.yScale = t =>
+    this.yScale = (t) =>
       this.offsetPoint(
         Math.cos(t) *
           this.radius *
@@ -171,7 +171,7 @@ class Drawing {
     // pixelColor is used when drawing with imageData because individual channels are required
     // could consider refactoring the factory to return channels by default and then transform as needed
     this.getPixelColor = this.params.lineColor.value(this.max, 0, {
-      returnChannels: true
+      returnChannels: true,
     });
     this.lineWidth = this.params.width.value;
     this.increment = 1 / this.params.resolution.value;
@@ -183,13 +183,13 @@ export class Thumbnail extends Drawing {
   values: { [s: string]: number };
   constructor(canvasID: string, public mainCanvas: MainCanvas) {
     super(canvasID);
-    this.canvas.addEventListener('click', this.onClick.bind(this));
+    this.canvas.addEventListener("click", this.onClick.bind(this));
     this.values = {};
   }
 
   onClick(e) {
-    document.getElementById('mainCanvasControls').classList.remove('hide');
-    Object.keys(this.params).forEach(key => {
+    document.getElementById("mainCanvasControls").classList.remove("hide");
+    Object.keys(this.params).forEach((key) => {
       const param = this.params[key];
       param.setValue(this.values[param.param]);
     });
@@ -208,7 +208,7 @@ export class Thumbnail extends Drawing {
    * @param {Object} params
    */
   setParams(params, generate: boolean) {
-    Object.keys(params).forEach(key => {
+    Object.keys(params).forEach((key) => {
       const param = params[key];
       if (generate) {
         param.generate();
@@ -229,9 +229,9 @@ export class MainCanvas extends Drawing {
    * @param {Object} params
    */
   setParams(params) {
-    Object.keys(params).forEach(key => {
+    Object.keys(params).forEach((key) => {
       const param = params[key];
-      param.on('update', this.update.bind(this));
+      param.on("update", this.update.bind(this));
     });
     this.params = params;
     return this;
@@ -283,20 +283,30 @@ export class Harmonograph extends MainCanvas {
 
     // equations taken straight from the source
     // https://en.wikipedia.org/wiki/Harmonograph
-    this.xScale = t =>
+    this.xScale = (t) =>
       this.offsetPoint(
-        this.a1 * Math.sin(t * this.f1 + this.p1) * Math.pow(Math.E, (-this.d1 * t)) + this.a2 * Math.sin(t * this.f2 + this.p2) * Math.pow(Math.E, (-this.d2 * t))
+        this.a1 *
+          Math.sin(t * this.f1 + this.p1) *
+          Math.pow(Math.E, -this.d1 * t) +
+          this.a2 *
+            Math.sin(t * this.f2 + this.p2) *
+            Math.pow(Math.E, -this.d2 * t)
       );
-    this.yScale = t =>
+    this.yScale = (t) =>
       this.offsetPoint(
-      this.a3 * Math.sin(t * this.f3 + this.p3) * Math.pow(Math.E, (-this.d3 * t)) + this.a4 * Math.sin(t * this.f4 + this.p4) * Math.pow(Math.E, (-this.d4 * t))
+        this.a3 *
+          Math.sin(t * this.f3 + this.p3) *
+          Math.pow(Math.E, -this.d3 * t) +
+          this.a4 *
+            Math.sin(t * this.f4 + this.p4) *
+            Math.pow(Math.E, -this.d4 * t)
       );
     this.max = Math.PI * this.params.len.value;
     this.getLineColor = this.params.lineColor.value(this.max, 0);
     // pixelColor is used when drawing with imageData because individual channels are required
     // could consider refactoring the factory to return channels by default and then transform as needed
     this.getPixelColor = this.params.lineColor.value(this.max, 0, {
-      returnChannels: true
+      returnChannels: true,
     });
     this.lineWidth = this.params.width.value;
     this.increment = 1 / this.params.resolution.value;

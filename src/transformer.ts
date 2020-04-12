@@ -1,11 +1,11 @@
-import { round3 } from './helpers';
+import { round3 } from "./helpers";
 
 // TRANSFORMERS
 // ================
 
 export interface Transformer {
-  value: (number) => number,
-  position: (number) => number
+  value: (number) => number;
+  position: (number) => number;
 }
 
 // credit: https://stackoverflow.com/a/846249
@@ -24,7 +24,7 @@ export class LogSlider implements Transformer {
   }
 
   value(position) {
-    return Math.exp((position - this.minpos) * this.scale + this.minlval)
+    return Math.exp((position - this.minpos) * this.scale + this.minlval);
   }
   // Calculate slider position from a value
   position(value) {
@@ -32,7 +32,7 @@ export class LogSlider implements Transformer {
   }
 }
 
-const id = x => x;
+const id = (x) => x;
 
 export class IdentityTransformer implements Transformer {
   value: (any) => any;

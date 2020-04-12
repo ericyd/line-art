@@ -8,7 +8,7 @@
     "watch": "rollup -c -w",
     "css": "gulp",
     "build": "npm run js && npm run css",
-    "fmt": "prettier --write"
+    "fmt": "prettier --write \"**/**/*.ts\" "
   },
   "repository": {
     "type": "git",
