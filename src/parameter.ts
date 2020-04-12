@@ -281,9 +281,9 @@ export class OptionsParameter extends Parameter {
   }
 
   generate() {
-    const generated = Math.floor(Math.random() * this.options.length);
-    this.rawValue = generated;
-    this.option = this.options[generated];
+    // always start with "colorful"
+    this.rawValue = 0;
+    this.option = this.options[0];
     this.value = this.option.value;
     return this;
   }
@@ -348,11 +348,8 @@ export class ColorParameter extends Parameter {
   }
 
   generate() {
-    this.rawValue = this.value = this.chance()
-      ? '#000000'
-      : valToRGBFactory(100, 0, {
-          returnHex: true
-        })(Math.random() * 100);
+    // always start with black
+    this.rawValue = this.value = '#000000';
     return this;
   }
 }

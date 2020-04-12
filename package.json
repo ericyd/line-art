@@ -7,7 +7,8 @@
     "js": "rollup -c",
     "watch": "rollup -c -w",
     "css": "gulp",
-    "build": "npm run js && npm run css"
+    "build": "npm run js && npm run css",
+    "fmt": "prettier --write"
   },
   "repository": {
     "type": "git",
@@ -27,5 +28,7 @@
     "rollup": "^0.62.0",
     "rollup-plugin-typescript": "^0.8.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "prettier": "^2.0.4"
+  }
 }

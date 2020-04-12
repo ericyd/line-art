@@ -120,6 +120,7 @@ class Drawing {
       this.ctx.closePath();
       this.x = xTemp;
       this.y = yTemp;
+      // console.log(this.x, this.y);
     }
     return this;
   }
@@ -233,6 +234,72 @@ export class MainCanvas extends Drawing {
       param.on('update', this.update.bind(this));
     });
     this.params = params;
+    return this;
+  }
+}
+
+export class Harmonograph extends MainCanvas {
+  p1: number;
+  p2: number;
+  p3: number;
+  p4: number;
+  f1: number;
+  f2: number;
+  f3: number;
+  f4: number;
+  a1: number;
+  a2: number;
+  a3: number;
+  a4: number;
+  d1: number;
+  d2: number;
+  d3: number;
+  d4: number;
+  constructor(canvasID) {
+    super(canvasID);
+  }
+
+  /**
+   * Set drawing functions
+   * Must set params before calling
+   */
+  setEquations() {
+    this.a1 = this.params.a1.value;
+    this.a2 = this.params.a2.value;
+    this.a3 = this.params.a3.value;
+    this.a4 = this.params.a4.value;
+    this.f1 = this.params.f1.value;
+    this.f2 = this.params.f2.value;
+    this.f3 = this.params.f3.value;
+    this.f4 = this.params.f4.value;
+    this.p1 = this.params.p1.value;
+    this.p2 = this.params.p2.value;
+    this.p3 = this.params.p3.value;
+    this.p4 = this.params.p4.value;
+    this.d1 = this.params.d1.value;
+    this.d2 = this.params.d2.value;
+    this.d3 = this.params.d3.value;
+    this.d4 = this.params.d4.value;
+
+    // equations taken straight from the source
+    // https://en.wikipedia.org/wiki/Harmonograph
+    this.xScale = t =>
+      this.offsetPoint(
+        this.a1 * Math.sin(t * this.f1 + this.p1) * Math.pow(Math.E, (-this.d1 * t)) + this.a2 * Math.sin(t * this.f2 + this.p2) * Math.pow(Math.E, (-this.d2 * t))
+      );
+    this.yScale = t =>
+      this.offsetPoint(
+      this.a3 * Math.sin(t * this.f3 + this.p3) * Math.pow(Math.E, (-this.d3 * t)) + this.a4 * Math.sin(t * this.f4 + this.p4) * Math.pow(Math.E, (-this.d4 * t))
+      );
+    this.max = Math.PI * this.params.len.value;
+    this.getLineColor = this.params.lineColor.value(this.max, 0);
+    // pixelColor is used when drawing with imageData because individual channels are required
+    // could consider refactoring the factory to return channels by default and then transform as needed
+    this.getPixelColor = this.params.lineColor.value(this.max, 0, {
+      returnChannels: true
+    });
+    this.lineWidth = this.params.width.value;
+    this.increment = 1 / this.params.resolution.value;
     return this;
   }
 }

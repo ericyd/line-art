@@ -1,6 +1,6 @@
 import typescript from 'rollup-plugin-typescript';
 
-export default {
+const lineArtConfig = {
   input: './src/main.ts',
   output: {
     file: 'app.js',
@@ -13,3 +13,19 @@ export default {
     })
   ]
 }
+
+const harmonographConfig = {
+  input: './src/harmonograph.ts',
+  output: {
+    file: 'harmonograph.js',
+    format: 'iife'
+  },
+  plugins: [
+    typescript({
+      target: 'es5',
+      removeComments: true
+    })
+  ]
+}
+
+export default [ lineArtConfig, harmonographConfig ];

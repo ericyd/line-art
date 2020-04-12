@@ -377,128 +377,6 @@
     }
 
     Math.log10 = Math.log10 || function log10(x) { return Math.log(x) / Math.LN10; };
-    var oscillatorsX = [
-        {
-            id: 'osc0',
-            value: function (t) { return Math.sin(t); },
-            display: 'sine'
-        },
-        {
-            id: 'osc1',
-            value: function (t) { return Math.cos(t); },
-            display: 'cosine'
-        },
-        {
-            id: 'osc2',
-            value: function (t) { return (Math.sin(t) + 1) / 2; },
-            display: 'half-sine'
-        },
-        {
-            id: 'osc3',
-            value: function (t) { return Math.sin(t) * Math.pow(t, -0.35); },
-            display: 'collapse'
-        },
-        {
-            id: 'osc4',
-            value: function (t) {
-                var a = 0.5;
-                var b = 0.5;
-                return a - b * Math.sin(t);
-            },
-            display: 'trochoid'
-        },
-        {
-            id: 'osc5',
-            value: function (t) {
-                var r = 0.2;
-                var k = 3;
-                return r * (k + 1) * Math.cos(t) - r * Math.cos((k + 1) * t);
-            },
-            display: 'epicycloid'
-        },
-        {
-            id: 'osc6',
-            value: function (t) { return Math.sin(Math.cos(Math.log10(t))); },
-            display: 'log periodic'
-        },
-        {
-            id: 'osc7',
-            value: function (t) { return Math.abs(Math.sin(t / 10)); },
-            display: 'absolute'
-        },
-        {
-            id: 'osc8',
-            value: function (t) {
-                var start = Math.sin(t);
-                if (start > 0.5) {
-                    return start;
-                }
-                return start / -3;
-            },
-            display: 'experimental'
-        }
-    ];
-    var oscillatorsY = [
-        {
-            id: 'osc10',
-            value: function (t) { return Math.sin(t); },
-            display: 'sine'
-        },
-        {
-            id: 'osc11',
-            value: function (t) { return Math.cos(t); },
-            display: 'cosine'
-        },
-        {
-            id: 'osc12',
-            value: function (t) { return (Math.sin(t) + 1) / 2; },
-            display: 'half-sine'
-        },
-        {
-            id: 'osc13',
-            value: function (t) { return Math.sin(t) * Math.pow(t, -0.35); },
-            display: 'collapse'
-        },
-        {
-            id: 'osc14',
-            value: function (t) {
-                var a = 0.5;
-                var b = 0.5;
-                return a - b * Math.cos(t);
-            },
-            display: 'trochoid'
-        },
-        {
-            id: 'osc15',
-            value: function (t) {
-                var r = 0.2;
-                var k = 3;
-                return r * (k + 1) * Math.sin(t) - r * Math.sin((k + 1) * t);
-            },
-            display: 'epicycloid'
-        },
-        {
-            id: 'osc16',
-            value: function (t) { return Math.sin(Math.cos(Math.log10(t))); },
-            display: 'log periodic'
-        },
-        {
-            id: 'osc17',
-            value: function (t) { return Math.abs(Math.sin(t / 10)); },
-            display: 'absolute'
-        },
-        {
-            id: 'osc18',
-            value: function (t) {
-                var start = Math.sin(t);
-                if (start > 0.5) {
-                    return start;
-                }
-                return start / -3;
-            },
-            display: 'experimental'
-        }
-    ];
     var lineColors = [
         {
             id: 'colorful',
@@ -830,9 +708,9 @@
         var params = {
             solid: new BooleanParameter('solid'),
             resolution: new SliderParameter('resolution', {
-                min: 20,
-                max: 100,
-                step: 0.1,
+                min: 50,
+                max: 1000,
+                step: 1,
                 animationController: 'resolution-animate',
                 animationStep: 1 / 5000
             }),
@@ -851,30 +729,108 @@
                 animationController: 'width-animate',
                 animationStep: 1 / 1000
             }),
-            xModDepth: new SliderParameter('xModDepth', {
-                min: 1,
-                max: 10,
-                step: 0.001,
-                transformer: new LogSlider(),
-                generateIntegers: true,
-                animationController: 'xModDepth-animate',
-                animationStep: 1 / 10000
-            }),
-            yModDepth: new SliderParameter('yModDepth', {
-                min: 1,
-                max: 10,
-                step: 0.001,
-                transformer: new LogSlider(),
-                generateIntegers: true,
-                animationController: 'yModDepth-animate',
-                animationStep: 1 / 10000
-            }),
             lineColor: new OptionsParameter('lineColor', lineColors),
-            oscillatorX: new OptionsParameter('oscillatorX', oscillatorsX),
-            oscillatorY: new OptionsParameter('oscillatorY', oscillatorsY),
-            bgColor: new ColorParameter('bgColor')
+            bgColor: new ColorParameter('bgColor'),
+            p1: new SliderParameter('p1', {
+                min: 0.001,
+                max: 2 * Math.PI,
+                step: 0.001,
+                generateIntegers: true,
+            }),
+            p2: new SliderParameter('p2', {
+                min: 0.001,
+                max: 2 * Math.PI,
+                step: 0.001,
+                generateIntegers: true,
+            }),
+            p3: new SliderParameter('p3', {
+                min: 0.001,
+                max: 2 * Math.PI,
+                step: 0.001,
+                generateIntegers: true,
+            }),
+            p4: new SliderParameter('p4', {
+                min: 0.001,
+                max: 2 * Math.PI,
+                step: 0.001,
+                generateIntegers: true,
+            }),
+            f1: new SliderParameter('f1', {
+                min: 1,
+                max: 10,
+                step: 0.001,
+                transformer: new LogSlider(),
+                generateIntegers: true,
+            }),
+            f2: new SliderParameter('f2', {
+                min: 1,
+                max: 10,
+                step: 0.001,
+                transformer: new LogSlider(),
+                generateIntegers: true,
+            }),
+            f3: new SliderParameter('f3', {
+                min: 1,
+                max: 10,
+                step: 0.001,
+                transformer: new LogSlider(),
+                generateIntegers: true,
+            }),
+            f4: new SliderParameter('f4', {
+                min: 1,
+                max: 10,
+                step: 0.001,
+                transformer: new LogSlider(),
+                generateIntegers: true,
+            }),
+            d1: new SliderParameter('d1', {
+                min: 0.1,
+                max: 10,
+                step: 0.001,
+                transformer: new LogSlider(),
+                generateIntegers: true,
+            }),
+            d2: new SliderParameter('d2', {
+                min: 0.001,
+                max: 1,
+                step: 0.001,
+                generateIntegers: true,
+            }),
+            d3: new SliderParameter('d3', {
+                min: 0.1,
+                max: 10,
+                step: 0.001,
+                transformer: new LogSlider(),
+                generateIntegers: true,
+            }),
+            d4: new SliderParameter('d4', {
+                min: 0.001,
+                max: 1,
+                step: 0.001,
+                generateIntegers: true,
+            }),
+            a1: new SliderParameter('a1', {
+                min: 1,
+                max: 1000,
+                step: 0.01,
+            }),
+            a2: new SliderParameter('a2', {
+                min: 1,
+                max: 1000,
+                step: 0.01,
+            }),
+            a3: new SliderParameter('a3', {
+                min: 1,
+                max: 1000,
+                step: 0.01,
+            }),
+            a4: new SliderParameter('a4', {
+                min: 1,
+                max: 1000,
+                step: 0.01,
+            }),
         };
-        var mainCanvas = new MainCanvas(mainCanvasID)
+        var mainCanvas = new Harmonograph(mainCanvasID)
             .setParams(params)
             .setEquations()
             .draw();
