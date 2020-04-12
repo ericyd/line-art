@@ -31,6 +31,33 @@ polyfill();
 (function init() {
   var mainCanvasID = "mainCanvas";
 
+  const amplitudeConfig = {
+    min: 1,
+    max: 1000,
+    step: 0.01,
+  }
+
+  // Phase, not surprisingly, should range between 0 and 2*PI
+  const phaseConfig = {
+    min: 0.001,
+    max: 2 * Math.PI,
+    step: 0.001,
+  }
+
+  const frequencyConfig = {
+    min: 0.1,
+    max: 100,
+    step: 0.001,
+  }
+
+  const dampingConfig = {
+    min: 0.01,
+    max: 10,
+    step: 0.001,
+    transformer: new LogSlider({ minpos:0.01, maxpos:10, minval: 0.01, maxval: 10 }),
+    generateIntegers: true
+  }
+
   var params = {
     solid: new BooleanParameter("solid"),
     resolution: new SliderParameter("resolution", {
@@ -58,167 +85,26 @@ polyfill();
     lineColor: new OptionsParameter("lineColor", lineColors),
     bgColor: new ColorParameter("bgColor"),
 
-    // Phase, not surprisingly, should range between 0 and 2*PI
-    p1: new SliderParameter("p1", {
-      min: 0.001,
-      max: 2 * Math.PI,
-      step: 0.001,
-      // transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'p1-animate',
-      // animationStep: 1 / 10000
-    }),
+    p1: new SliderParameter("p1", phaseConfig),
+    p2: new SliderParameter("p2", phaseConfig),
+    p3: new SliderParameter("p3", phaseConfig),
+    p4: new SliderParameter("p4", phaseConfig),
 
-    p2: new SliderParameter("p2", {
-      min: 0.001,
-      max: 2 * Math.PI,
-      step: 0.001,
-      // transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'p2-animate',
-      // animationStep: 1 / 10000
-    }),
+    f1: new SliderParameter("f1", frequencyConfig),
+    f2: new SliderParameter("f2", frequencyConfig),
+    f3: new SliderParameter("f3", frequencyConfig),
+    f4: new SliderParameter("f4", frequencyConfig),
 
-    p3: new SliderParameter("p3", {
-      min: 0.001,
-      max: 2 * Math.PI,
-      step: 0.001,
-      // transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'p3-animate',
-      // animationStep: 1 / 10000
-    }),
+    d1: new SliderParameter("d1", dampingConfig),
+    d2: new SliderParameter("d2", dampingConfig),
+    d3: new SliderParameter("d3", dampingConfig),
+    d4: new SliderParameter("d4", dampingConfig),
 
-    p4: new SliderParameter("p4", {
-      min: 0.001,
-      max: 2 * Math.PI,
-      step: 0.001,
-      // transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'p4-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    f1: new SliderParameter("f1", {
-      min: 1,
-      max: 10,
-      step: 0.001,
-      transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'f1-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    f2: new SliderParameter("f2", {
-      min: 1,
-      max: 10,
-      step: 0.001,
-      transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'f2-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    f3: new SliderParameter("f3", {
-      min: 1,
-      max: 10,
-      step: 0.001,
-      transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'f3-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    f4: new SliderParameter("f4", {
-      min: 1,
-      max: 10,
-      step: 0.001,
-      transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'f4-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    d1: new SliderParameter("d1", {
-      min: 0.1,
-      max: 10,
-      step: 0.001,
-      transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'd1-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    // d2 and d4 are very sensitive, going above 1 not recommended
-    d2: new SliderParameter("d2", {
-      min: 0.001,
-      max: 1,
-      step: 0.001,
-      // transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'd2-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    d3: new SliderParameter("d3", {
-      min: 0.1,
-      max: 10,
-      step: 0.001,
-      transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'd3-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    d4: new SliderParameter("d4", {
-      min: 0.001,
-      max: 1,
-      step: 0.001,
-      // transformer: new LogSlider(),
-      generateIntegers: true,
-      // animationController: 'd4-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    a1: new SliderParameter("a1", {
-      min: 1,
-      max: 1000,
-      step: 0.01,
-      // transformer: new LogSlider(),
-      // generateIntegers: true,
-      // animationController: 'a1-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    a2: new SliderParameter("a2", {
-      min: 1,
-      max: 1000,
-      step: 0.01,
-      // transformer: new LogSlider(),
-      // generateIntegers: true,
-      // animationController: 'a2-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    a3: new SliderParameter("a3", {
-      min: 1,
-      max: 1000,
-      step: 0.01,
-      // transformer: new LogSlider(),
-      // generateIntegers: true,
-      // animationController: 'a3-animate',
-      // animationStep: 1 / 10000
-    }),
-
-    a4: new SliderParameter("a4", {
-      min: 1,
-      max: 1000,
-      step: 0.01,
-      // transformer: new LogSlider(),
-      // generateIntegers: true,
-      // animationController: 'a4-animate',
-      // animationStep: 1 / 10000
-    }),
+    
+    a1: new SliderParameter("a1", amplitudeConfig),
+    a2: new SliderParameter("a2", amplitudeConfig),
+    a3: new SliderParameter("a3", amplitudeConfig),
+    a4: new SliderParameter("a4", amplitudeConfig),
   };
 
   // instantiate main canvas
@@ -249,7 +135,6 @@ polyfill();
   //   .addEventListener("click", toggleSidebar);
 
   // enable downloading image
-  const downloader = document.getElementById("downloadBtn");
   document.getElementById("downloadBtn").addEventListener("click", (e) => {
     download(e, "mainCanvas");
   });

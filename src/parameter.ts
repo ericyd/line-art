@@ -153,15 +153,16 @@ export class SliderParameter extends Parameter {
   }
 
   setAttributes() {
-    this.controls[0].setAttribute("value", this.rawValue);
     this.controls[0].setAttribute("step", String(this.step));
     this.controls[0].setAttribute("max", String(this.max));
     this.controls[0].setAttribute("min", String(this.min));
+    this.controls[0].setAttribute("value", this.rawValue);
     return this;
   }
 
   update(value, emit = true) {
-    this.value = this.transformer.value(Number(value));
+    this.rawValue = Number(value);
+    this.value = this.transformer.value(this.rawValue);
     this.updateDisplay(round2(this.value));
     if (emit) {
       this.emit("update");
@@ -174,13 +175,10 @@ export class SliderParameter extends Parameter {
       // have to call this.transformer.position here because this is
       // what we want the final result to be;
       // internally, this.value is stored as the transformed value
+      var rand = Math.random() * (this.transformer.maxpos - this.transformer.minpos) + this.transformer.minpos;
       var generated = this.transformer.position(
-        Math.pow(
-          // Math.ceil(Math.random() * 10) + (this.chance() ? 1 : -1) * Math.random() / 20, // base
-          Math.ceil(Math.random() * 10) + (this.chance() ? 0.01 : -0.01), // base
-          this.chance() ? -1 : 1 // exponent
-        )
-      );
+        rand
+        );
     } else if (this.generate1) {
       var generated = 1;
     } else {
@@ -198,7 +196,7 @@ export class SliderParameter extends Parameter {
 
   // these don't need to be handled synchronously - effects are non-critical
   // however, typescript compiles these to generator functions which IE seems to not understand.
-  // Since it is a huge performance boost anyway I am removing async to increase compatibility
+  // Since it isn't a huge performance boost anyway I am removing async to increase compatibility
   /*async*/ toggleAnimationDirection() {
     this.animation.isIncrementing = !this.animation.isIncrementing;
   }

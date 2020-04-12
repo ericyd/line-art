@@ -654,15 +654,16 @@
             return this;
         }
         SliderParameter.prototype.setAttributes = function () {
-            this.controls[0].setAttribute("value", this.rawValue);
             this.controls[0].setAttribute("step", String(this.step));
             this.controls[0].setAttribute("max", String(this.max));
             this.controls[0].setAttribute("min", String(this.min));
+            this.controls[0].setAttribute("value", this.rawValue);
             return this;
         };
         SliderParameter.prototype.update = function (value, emit) {
             if (emit === void 0) { emit = true; }
-            this.value = this.transformer.value(Number(value));
+            this.rawValue = Number(value);
+            this.value = this.transformer.value(this.rawValue);
             this.updateDisplay(round2(this.value));
             if (emit) {
                 this.emit("update");
@@ -671,7 +672,8 @@
         };
         SliderParameter.prototype.generate = function () {
             if (this.generateIntegers) {
-                var generated = this.transformer.position(Math.pow(Math.ceil(Math.random() * 10) + (this.chance() ? 0.01 : -0.01), this.chance() ? -1 : 1));
+                var rand = Math.random() * (this.transformer.maxpos - this.transformer.minpos) + this.transformer.minpos;
+                var generated = this.transformer.position(rand);
             }
             else if (this.generate1) {
                 var generated = 1;

@@ -521,15 +521,16 @@
             return this;
         }
         SliderParameter.prototype.setAttributes = function () {
-            this.controls[0].setAttribute("value", this.rawValue);
             this.controls[0].setAttribute("step", String(this.step));
             this.controls[0].setAttribute("max", String(this.max));
             this.controls[0].setAttribute("min", String(this.min));
+            this.controls[0].setAttribute("value", this.rawValue);
             return this;
         };
         SliderParameter.prototype.update = function (value, emit) {
             if (emit === void 0) { emit = true; }
-            this.value = this.transformer.value(Number(value));
+            this.rawValue = Number(value);
+            this.value = this.transformer.value(this.rawValue);
             this.updateDisplay(round2(this.value));
             if (emit) {
                 this.emit("update");
@@ -538,7 +539,8 @@
         };
         SliderParameter.prototype.generate = function () {
             if (this.generateIntegers) {
-                var generated = this.transformer.position(Math.pow(Math.ceil(Math.random() * 10) + (this.chance() ? 0.01 : -0.01), this.chance() ? -1 : 1));
+                var rand = Math.random() * (this.transformer.maxpos - this.transformer.minpos) + this.transformer.minpos;
+                var generated = this.transformer.position(rand);
             }
             else if (this.generate1) {
                 var generated = 1;
@@ -706,6 +708,28 @@
     polyfill();
     (function init() {
         var mainCanvasID = "mainCanvas";
+        var amplitudeConfig = {
+            min: 1,
+            max: 1000,
+            step: 0.01,
+        };
+        var phaseConfig = {
+            min: 0.001,
+            max: 2 * Math.PI,
+            step: 0.001,
+        };
+        var frequencyConfig = {
+            min: 0.1,
+            max: 100,
+            step: 0.001,
+        };
+        var dampingConfig = {
+            min: 0.01,
+            max: 10,
+            step: 0.001,
+            transformer: new LogSlider({ minpos: 0.01, maxpos: 10, minval: 0.01, maxval: 10 }),
+            generateIntegers: true
+        };
         var params = {
             solid: new BooleanParameter("solid"),
             resolution: new SliderParameter("resolution", {
@@ -732,104 +756,22 @@
             }),
             lineColor: new OptionsParameter("lineColor", lineColors),
             bgColor: new ColorParameter("bgColor"),
-            p1: new SliderParameter("p1", {
-                min: 0.001,
-                max: 2 * Math.PI,
-                step: 0.001,
-                generateIntegers: true,
-            }),
-            p2: new SliderParameter("p2", {
-                min: 0.001,
-                max: 2 * Math.PI,
-                step: 0.001,
-                generateIntegers: true,
-            }),
-            p3: new SliderParameter("p3", {
-                min: 0.001,
-                max: 2 * Math.PI,
-                step: 0.001,
-                generateIntegers: true,
-            }),
-            p4: new SliderParameter("p4", {
-                min: 0.001,
-                max: 2 * Math.PI,
-                step: 0.001,
-                generateIntegers: true,
-            }),
-            f1: new SliderParameter("f1", {
-                min: 1,
-                max: 10,
-                step: 0.001,
-                transformer: new LogSlider(),
-                generateIntegers: true,
-            }),
-            f2: new SliderParameter("f2", {
-                min: 1,
-                max: 10,
-                step: 0.001,
-                transformer: new LogSlider(),
-                generateIntegers: true,
-            }),
-            f3: new SliderParameter("f3", {
-                min: 1,
-                max: 10,
-                step: 0.001,
-                transformer: new LogSlider(),
-                generateIntegers: true,
-            }),
-            f4: new SliderParameter("f4", {
-                min: 1,
-                max: 10,
-                step: 0.001,
-                transformer: new LogSlider(),
-                generateIntegers: true,
-            }),
-            d1: new SliderParameter("d1", {
-                min: 0.1,
-                max: 10,
-                step: 0.001,
-                transformer: new LogSlider(),
-                generateIntegers: true,
-            }),
-            d2: new SliderParameter("d2", {
-                min: 0.001,
-                max: 1,
-                step: 0.001,
-                generateIntegers: true,
-            }),
-            d3: new SliderParameter("d3", {
-                min: 0.1,
-                max: 10,
-                step: 0.001,
-                transformer: new LogSlider(),
-                generateIntegers: true,
-            }),
-            d4: new SliderParameter("d4", {
-                min: 0.001,
-                max: 1,
-                step: 0.001,
-                generateIntegers: true,
-            }),
-            a1: new SliderParameter("a1", {
-                min: 1,
-                max: 1000,
-                step: 0.01,
-            }),
-            a2: new SliderParameter("a2", {
-                min: 1,
-                max: 1000,
-                step: 0.01,
-            }),
-            a3: new SliderParameter("a3", {
-                min: 1,
-                max: 1000,
-                step: 0.01,
-            }),
-            a4: new SliderParameter("a4", {
-                min: 1,
-                max: 1000,
-                step: 0.01,
-            }),
+            p1: new SliderParameter("p1", phaseConfig),
+            p2: new SliderParameter("p2", phaseConfig),
+            p3: new SliderParameter("p3", phaseConfig),
+            p4: new SliderParameter("p4", phaseConfig),
+            f1: new SliderParameter("f1", frequencyConfig),
+            f2: new SliderParameter("f2", frequencyConfig),
+            f3: new SliderParameter("f3", frequencyConfig),
+            f4: new SliderParameter("f4", frequencyConfig),
+            d1: new SliderParameter("d1", dampingConfig),
+            d2: new SliderParameter("d2", dampingConfig),
+            d3: new SliderParameter("d3", dampingConfig),
+            d4: new SliderParameter("d4", dampingConfig),
+            a1: new SliderParameter("a1", amplitudeConfig),
+            a2: new SliderParameter("a2", amplitudeConfig),
+            a3: new SliderParameter("a3", amplitudeConfig),
+            a4: new SliderParameter("a4", amplitudeConfig),
         };
         var mainCanvas = new Harmonograph(mainCanvasID)
             .setParams(params)
@@ -841,7 +783,6 @@
         document.querySelectorAll(".toggler").forEach(function (el) {
             el.addEventListener("click", toggleNextBlock);
         });
-        var downloader = document.getElementById("downloadBtn");
         document.getElementById("downloadBtn").addEventListener("click", function (e) {
             download(e, "mainCanvas");
         });
