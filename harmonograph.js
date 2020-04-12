@@ -309,17 +309,6 @@
             .toDataURL("image/png")
             .replace(/^data:image\/[^;]/, "data:application/octet-stream");
     }
-    function refresh(params, mainCanvas) {
-        return function () {
-            document.querySelectorAll(".sidebar__thumb").forEach(function (el, i) {
-                new Thumbnail(el.id, mainCanvas).setParams(params, true).update();
-            });
-        };
-    }
-    function toggleSidebar(e) {
-        document.getElementById("sidebar").classList.toggle("collapsed");
-        document.getElementById("sidebar").classList.toggle("expanded");
-    }
     function toggleNextBlock(e) {
         var listener = e.currentTarget;
         listener.parentElement.classList.toggle("is-expanded");
@@ -849,17 +838,9 @@
         document.getElementById("mainCanvasControls").classList.remove("hide");
         loadParams(mainCanvas);
         mainCanvas.setParams(params).update();
-        var refreshParams = refresh(params, mainCanvas);
-        document.getElementById("refresh").addEventListener("click", refreshParams);
         document.querySelectorAll(".toggler").forEach(function (el) {
             el.addEventListener("click", toggleNextBlock);
         });
-        document
-            .getElementById("close-sidebar")
-            .addEventListener("click", toggleSidebar);
-        document
-            .getElementById("open-sidebar")
-            .addEventListener("click", toggleSidebar);
         var downloader = document.getElementById("downloadBtn");
         document.getElementById("downloadBtn").addEventListener("click", function (e) {
             download(e, "mainCanvas");

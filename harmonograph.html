@@ -10,7 +10,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:description" content="Relax, play around, and find your eye candy." />
   <meta property="og:url" content="http://ericyd.com/line-art" />
-  <meta property="og:image" content="https://raw.githubusercontent.com/ericyd/line-art/master/images/sample.png" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/ericyd/line-art/master/images/harmonograph.png" />
   <meta property="og:image:width" content="334" />
   <meta property="og:image:height" content="199" />
   <meta property="og:image:alt" content="Sample not available, so make your own!" />
@@ -32,8 +32,11 @@
 </svg>
 
 <!-- Note to self: this is being removed because I don't
-know how to auto-generate good harmonographs yet -->
-<!-- <section id="sidebar" class="sidebar collapsed">
+know how to auto-generate good harmonographs yet
+Leaving the physical HTML with visibility:none because
+otherwise the download feature doesn't work
+-->
+<section id="sidebar" class="sidebar collapsed" style="visibility:none;">
   <div class="sidebar__header">
     Click an image to edit
     <button id="close-sidebar" class="btn--secondary btn--menu">
@@ -56,7 +59,7 @@ know how to auto-generate good harmonographs yet -->
     <canvas class="sidebar__thumb" id="myCanvas9" width="225" height="225"></canvas>
     <canvas class="sidebar__thumb" id="myCanvas10" width="225" height="225"></canvas>
   </div>
-</section> -->
+</section>
 
 <section class="main push-body">
   <div id="mainCanvasControls" class="main__controls hide">
@@ -123,196 +126,106 @@ know how to auto-generate good harmonographs yet -->
 
     <fieldset class="control-group is-expanded">
       <legend class="control-group__legend toggler">
-        amplitude
+        Oscillator 1
       </legend>
       <div class="toggle-target">
         <label for="a1" class="control__label">
-          a1:
+          amplitude 1:
           <span id="a1-value" class="control__value"></span>
         </label>
         <input type="range" id="a1" class="control__input--range">
 
-        <label for="a2" class="control__label">
-          a2:
-          <span id="a2-value" class="control__value"></span>
-        </label>
-        <input type="range" id="a2" class="control__input--range">
-
-
-        <label for="a3" class="control__label">
-          a3:
-          <span id="a3-value" class="control__value"></span>
-        </label>
-        <input type="range" id="a3" class="control__input--range">
-
-
-        <label for="a4" class="control__label">
-          a4:
-          <span id="a4-value" class="control__value"></span>
-        </label>
-        <input type="range" id="a4" class="control__input--range">
-        <!-- animation -->
-        <!-- <div id="xModDepth-animate" class="animation-group">
-          <div class="row">
-            <label for="xModDepth-animation-run-toggle" class="control__label row__item">
-              animate
-            </label>
-            <div class="row__item">
-              <input type="checkbox" id="xModDepth-animation-run-toggle" class="control__input animation-run-toggle">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="row__item">
-              flip direction
-            </div>
-            <div class="row__item">
-              <button type="button" class="animation-direction-toggle" title="flip direction">
-                <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <use href="#svg-animation-direction-toggle" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="row">
-            <label for="xModDepth-animation-speed" class="control__label row__item">speed</label>
-            <input type="range" id="xModDepth-animation-speed" class="control__input--70 animation-step row__item">
-          </div>
-        </div> -->
-
-      </div>
-    </fieldset>
-
-
-
-    <fieldset class="control-group is-expanded">
-      <legend class="control-group__legend toggler">
-        phase
-      </legend>
-      <div class="toggle-target">
-        <label for="p1" class="control__label">
-          p1:
-          <span id="p1-value" class="control__value"></span>
-        </label>
-        <input type="range" id="p1" class="control__input--range">
-
-        <label for="p2" class="control__label">
-          p2:
-          <span id="p2-value" class="control__value"></span>
-        </label>
-        <input type="range" id="p2" class="control__input--range">
-
-
-        <label for="p3" class="control__label">
-          p3:
-          <span id="p3-value" class="control__value"></span>
-        </label>
-        <input type="range" id="p3" class="control__input--range">
-
-
-        <label for="p4" class="control__label">
-          p4:
-          <span id="p4-value" class="control__value"></span>
-        </label>
-        <input type="range" id="p4" class="control__input--range">
-        <!-- animation -->
-        <!-- <div id="xModDepth-animate" class="animation-group">
-          <div class="row">
-            <label for="xModDepth-animation-run-toggle" class="control__label row__item">
-              animate
-            </label>
-            <div class="row__item">
-              <input type="checkbox" id="xModDepth-animation-run-toggle" class="control__input animation-run-toggle">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="row__item">
-              flip direction
-            </div>
-            <div class="row__item">
-              <button type="button" class="animation-direction-toggle" title="flip direction">
-                <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <use href="#svg-animation-direction-toggle" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="row">
-            <label for="xModDepth-animation-speed" class="control__label row__item">speed</label>
-            <input type="range" id="xModDepth-animation-speed" class="control__input--70 animation-step row__item">
-          </div>
-        </div> -->
-
-      </div>
-    </fieldset>
-
-
-
-
-
-    <fieldset class="control-group is-expanded">
-      <legend class="control-group__legend toggler">
-        frequency
-      </legend>
-      <div class="toggle-target">
         <label for="f1" class="control__label">
-          f1:
+          frequency 1:
           <span id="f1-value" class="control__value"></span>
         </label>
         <input type="range" id="f1" class="control__input--range">
 
+
+        <label for="d1" class="control__label">
+          damping 1:
+          <span id="d1-value" class="control__value"></span>
+        </label>
+        <input type="range" id="d1" class="control__input--range">
+
+
+        <label for="p1" class="control__label">
+          phase 1:
+          <span id="p1-value" class="control__value"></span>
+        </label>
+        <input type="range" id="p1" class="control__input--range">
+      </div>
+    </fieldset>
+
+
+
+    <fieldset class="control-group is-expanded">
+      <legend class="control-group__legend toggler">
+        Oscillator 2
+      </legend>
+      <div class="toggle-target">
+        <label for="a2" class="control__label">
+          amplitude 2:
+          <span id="a2-value" class="control__value"></span>
+        </label>
+        <input type="range" id="a2" class="control__input--range">
+
         <label for="f2" class="control__label">
-          f2:
+          frequency 2:
           <span id="f2-value" class="control__value"></span>
         </label>
         <input type="range" id="f2" class="control__input--range">
 
 
+        <label for="d2" class="control__label">
+          damping 2:
+          <span id="d2-value" class="control__value"></span>
+        </label>
+        <input type="range" id="d2" class="control__input--range">
+
+
+        <label for="p2" class="control__label">
+          phase 2:
+          <span id="p2-value" class="control__value"></span>
+        </label>
+        <input type="range" id="p2" class="control__input--range">
+      </div>
+    </fieldset>
+
+
+
+
+
+    <fieldset class="control-group is-expanded">
+      <legend class="control-group__legend toggler">
+        Oscillator 3
+      </legend>
+      <div class="toggle-target">
+        <label for="a3" class="control__label">
+          amplitude 3:
+          <span id="a3-value" class="control__value"></span>
+        </label>
+        <input type="range" id="a3" class="control__input--range">
+
         <label for="f3" class="control__label">
-          f3:
+          frequency 3:
           <span id="f3-value" class="control__value"></span>
         </label>
         <input type="range" id="f3" class="control__input--range">
 
 
-        <label for="f4" class="control__label">
-          f4:
-          <span id="f4-value" class="control__value"></span>
+        <label for="d3" class="control__label">
+          damping 3:
+          <span id="d3-value" class="control__value"></span>
         </label>
-        <input type="range" id="f4" class="control__input--range">
-        <!-- animation -->
-        <!-- <div id="xModDepth-animate" class="animation-group">
-          <div class="row">
-            <label for="xModDepth-animation-run-toggle" class="control__label row__item">
-              animate
-            </label>
-            <div class="row__item">
-              <input type="checkbox" id="xModDepth-animation-run-toggle" class="control__input animation-run-toggle">
-            </div>
-          </div>
+        <input type="range" id="d3" class="control__input--range">
 
-          <div class="row">
-            <div class="row__item">
-              flip direction
-            </div>
-            <div class="row__item">
-              <button type="button" class="animation-direction-toggle" title="flip direction">
-                <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <use href="#svg-animation-direction-toggle" />
-                </svg>
-              </button>
-            </div>
-          </div>
 
-          <div class="row">
-            <label for="xModDepth-animation-speed" class="control__label row__item">speed</label>
-            <input type="range" id="xModDepth-animation-speed" class="control__input--70 animation-step row__item">
-          </div>
-        </div> -->
-
+        <label for="p3" class="control__label">
+          phase 3:
+          <span id="p3-value" class="control__value"></span>
+        </label>
+        <input type="range" id="p3" class="control__input--range">
       </div>
     </fieldset>
 
@@ -321,64 +234,34 @@ know how to auto-generate good harmonographs yet -->
 
     <fieldset class="control-group is-expanded">
       <legend class="control-group__legend toggler">
-        damping
+        Oscillator 4
       </legend>
       <div class="toggle-target">
-        <label for="d1" class="control__label">
-          d1:
-          <span id="d1-value" class="control__value"></span>
+        <label for="a4" class="control__label">
+          amplitude 4:
+          <span id="a4-value" class="control__value"></span>
         </label>
-        <input type="range" id="d1" class="control__input--range">
+        <input type="range" id="a4" class="control__input--range">
 
-        <label for="d2" class="control__label">
-          d2:
-          <span id="d2-value" class="control__value"></span>
+        <label for="f4" class="control__label">
+          frequency 4:
+          <span id="f4-value" class="control__value"></span>
         </label>
-        <input type="range" id="d2" class="control__input--range">
-
-
-        <label for="d3" class="control__label">
-          d3:
-          <span id="d3-value" class="control__value"></span>
-        </label>
-        <input type="range" id="d3" class="control__input--range">
+        <input type="range" id="f4" class="control__input--range">
 
 
         <label for="d4" class="control__label">
-          d4:
+          damping 4:
           <span id="d4-value" class="control__value"></span>
         </label>
         <input type="range" id="d4" class="control__input--range">
-        <!-- animation -->
-        <!-- <div id="xModDepth-animate" class="animation-group">
-          <div class="row">
-            <label for="xModDepth-animation-run-toggle" class="control__label row__item">
-              animate
-            </label>
-            <div class="row__item">
-              <input type="checkbox" id="xModDepth-animation-run-toggle" class="control__input animation-run-toggle">
-            </div>
-          </div>
 
-          <div class="row">
-            <div class="row__item">
-              flip direction
-            </div>
-            <div class="row__item">
-              <button type="button" class="animation-direction-toggle" title="flip direction">
-                <svg width="1em" height="1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <use href="#svg-animation-direction-toggle" />
-                </svg>
-              </button>
-            </div>
-          </div>
 
-          <div class="row">
-            <label for="xModDepth-animation-speed" class="control__label row__item">speed</label>
-            <input type="range" id="xModDepth-animation-speed" class="control__input--70 animation-step row__item">
-          </div>
-        </div> -->
-
+        <label for="p4" class="control__label">
+          phase 4:
+          <span id="p4-value" class="control__value"></span>
+        </label>
+        <input type="range" id="p4" class="control__input--range">
       </div>
     </fieldset>
 

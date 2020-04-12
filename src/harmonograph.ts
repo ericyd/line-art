@@ -233,20 +233,20 @@ polyfill();
   mainCanvas.setParams(params).update();
 
   // generate thumbnails
-  var refreshParams = refresh(params, mainCanvas);
-  document.getElementById("refresh").addEventListener("click", refreshParams);
+  // var refreshParams = refresh(params, mainCanvas);
+  // document.getElementById("refresh").addEventListener("click", refreshParams);
 
   // add toggle functionality
   document.querySelectorAll(".toggler").forEach(function (el) {
     el.addEventListener("click", toggleNextBlock);
   });
 
-  document
-    .getElementById("close-sidebar")
-    .addEventListener("click", toggleSidebar);
-  document
-    .getElementById("open-sidebar")
-    .addEventListener("click", toggleSidebar);
+  // document
+  //   .getElementById("close-sidebar")
+  //   .addEventListener("click", toggleSidebar);
+  // document
+  //   .getElementById("open-sidebar")
+  //   .addEventListener("click", toggleSidebar);
 
   // enable downloading image
   const downloader = document.getElementById("downloadBtn");
