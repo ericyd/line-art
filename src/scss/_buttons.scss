@@ -20,13 +20,13 @@
 }
 
 .btn--secondary {
-  background-color: $color-background;
-  color: $color-foreground;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
   border: 0;
   font-size: 20px;
 }
 
 .btn--secondary svg {
-  fill: $color-foreground;
+  fill: var(--color-foreground);
   border: 0;
 }

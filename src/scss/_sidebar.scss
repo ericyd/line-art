@@ -2,7 +2,7 @@
 =============== */
 
 .push-body {
-  transition: all $transition-time ease;
+  transition: all var(--transition-time) ease;
   overflow-x: hidden;
   position: relative;
 }
@@ -10,10 +10,10 @@
 .sidebar {
   /* thanks to jPushMenu for this inspiration
    https://github.com/takien/jPushMenu/blob/1e960b77fb3666434a580eb6980403b049f79355/css/jPushMenu.css */
-  transition: all $transition-time ease;
+  transition: all var(--transition-time) ease;
   border: 0;
   border-right: 1px solid #000;
-  background-color: $color-background;
+  background-color: var(--color-background);
   padding: 1em 0;
   position: absolute;
   top: 0;

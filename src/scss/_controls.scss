@@ -11,18 +11,18 @@
 }
 
 .control-group__legend {
-  background-color: $color-background--dark;
+  background-color: var(--color-background-2);
   display: block;
   padding: 1em;
   margin-bottom: 0.5em;
   width: 100%;
-  border-bottom: 1px solid $color-foreground;
+  border-bottom: 1px solid var(--color-foreground);
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .control-group__legend:hover {
-  background-color: lighten($color-background--dark, 3%);
+  background-color: var(--color-background-3);
 }
 
 .is-expanded .control-group__legend {
@@ -71,12 +71,12 @@
   align-content: center;
   flex-flow: row wrap;
   justify-content: space-evenly;
-  color: $color-foreground;
-  background-color: $color-background;
+  color: var(--color-foreground);
+  background-color: var(--color-background);
   width: 8em;
   padding: 0.25em;
   cursor: pointer;
-  border: 1px solid $color-foreground;
+  border: 1px solid var(--color-foreground);
   border-radius: 0.2em;
   box-sizing: border-box;
   transition: all 0.3s;
@@ -84,8 +84,8 @@
 
 .control__input--radio:checked + .control__label--radio,
 .control__label--radio:hover {
-  background-color: $color-foreground;
-  color: $color-background;
+  background-color: var(--color-foreground);
+  color: var(--color-background);
 }
 
 .control__label--block {
@@ -94,8 +94,8 @@
 
 .animation-direction-toggle {
   border: 0;
-  background-color: $color-background;
-  color: $color-foreground;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
   font-size: 1.5em;
   padding: 0;
 }

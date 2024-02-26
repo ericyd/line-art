@@ -1,12 +1,15 @@
-$color-foreground: rgb(220, 220, 220); // #dcdcdc
-$color-background: rgb(40, 40, 40);
-$color-background--dark: darken($color-background, 7%);
-$transition-time: 0.3s;
-
 @import 'layout';
 @import 'sidebar';
 @import 'buttons';
 @import 'controls';
+
+:root {
+  --color-foreground: rgb(220, 220, 220); // #dcdcdc
+  --color-background: rgb(40, 40, 40);
+  --color-background-2: #161616;
+  --color-background-3: #1e1e1e;
+  --transition-time: 0.3s;
+}
 
 /* OVERRIDES
 =============== */
