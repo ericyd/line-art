@@ -20,7 +20,11 @@ export class Parameter {
   rawValue: any;
   update: (value: string, emit?: boolean) => Parameter;
   setAttributes: () => Parameter;
-  constructor(public param: string, ids, public rawValueType: any) {
+  constructor(
+    public param: string,
+    ids,
+    public rawValueType: any,
+  ) {
     this.events = {};
     this.controls = ids.map((id) => document.getElementById(id));
     try {
@@ -94,7 +98,7 @@ export class SliderParameter extends Parameter {
       generate1 = false,
       animationController = false,
       animationStep = 0.01,
-    } = {}
+    } = {},
   ) {
     super(param, [param], "number");
     this.max = max;
@@ -115,7 +119,7 @@ export class SliderParameter extends Parameter {
         controller: {
           run: animationContainer.querySelector(".animation-run-toggle"),
           direction: animationContainer.querySelector(
-            ".animation-direction-toggle"
+            ".animation-direction-toggle",
           ),
           step: animationContainer.querySelector(".animation-step"),
         },
@@ -123,23 +127,23 @@ export class SliderParameter extends Parameter {
       this.animate = this.animate.bind(this);
       this.animation.controller.run.addEventListener(
         "input",
-        this.toggleAnimation.bind(this)
+        this.toggleAnimation.bind(this),
       );
       this.animation.controller.direction.addEventListener(
         "click",
-        this.toggleAnimationDirection.bind(this)
+        this.toggleAnimationDirection.bind(this),
       );
       this.animation.controller.step.addEventListener(
         "input",
-        throttle(this.updateAnimationStep.bind(this), 150)
+        throttle(this.updateAnimationStep.bind(this), 150),
       );
       this.animation.controller.step.setAttribute(
         "max",
-        this.animation.step * 50
+        this.animation.step * 50,
       );
       this.animation.controller.step.setAttribute(
         "min",
-        this.animation.step / 10
+        this.animation.step / 10,
       );
       this.animation.controller.step.setAttribute("step", this.animation.step);
       this.animation.controller.step.setAttribute("value", this.animation.step);
@@ -241,11 +245,14 @@ export class OptionsParameter extends Parameter {
    * @param {string} param
    * @param {{id: string, value: function, display: string}[]} options
    */
-  constructor(public param: string, options) {
+  constructor(
+    public param: string,
+    options,
+  ) {
     super(
       param,
       options.map((o) => o.id),
-      "number"
+      "number",
     );
     this.options = options;
     this.generate()

@@ -35,7 +35,7 @@ class Drawing {
     this.useImageData = false;
     this.imageData = this.ctx.createImageData(
       this.canvas.width,
-      this.canvas.height
+      this.canvas.height,
     );
     // this.canvas.addEventListener('mousemove', this.logDataOnHover.bind(this));
 
@@ -82,7 +82,7 @@ class Drawing {
       0,
       0,
       this.canvas.width,
-      this.canvas.height
+      this.canvas.height,
     );
     for (let t = this.min; t <= this.max; t += this.increment) {
       // if x and y are not rounded, the pixel indexing is very inaccurate (why?)
@@ -162,13 +162,13 @@ class Drawing {
       this.offsetPoint(
         Math.sin(t) *
           this.radius *
-          this.params.oscillatorY.value(t * this.params.xModDepth.value)
+          this.params.oscillatorY.value(t * this.params.xModDepth.value),
       );
     this.yScale = (t) =>
       this.offsetPoint(
         Math.cos(t) *
           this.radius *
-          this.params.oscillatorX.value(t * this.params.yModDepth.value)
+          this.params.oscillatorX.value(t * this.params.yModDepth.value),
       );
     this.max = Math.PI * this.params.len.value;
     this.getLineColor = this.params.lineColor.value(this.max, 0);
@@ -185,7 +185,10 @@ class Drawing {
 
 export class Thumbnail extends Drawing {
   values: { [s: string]: number };
-  constructor(canvasID: string, public mainCanvas: MainCanvas) {
+  constructor(
+    canvasID: string,
+    public mainCanvas: MainCanvas,
+  ) {
     super(canvasID);
     this.canvas.addEventListener("click", this.onClick.bind(this));
     this.values = {};
@@ -294,7 +297,7 @@ export class Harmonograph extends MainCanvas {
           Math.pow(Math.E, -this.d1 * t) +
           this.a2 *
             Math.sin(t * this.f2 + this.p2) *
-            Math.pow(Math.E, -this.d2 * t)
+            Math.pow(Math.E, -this.d2 * t),
       );
     this.yScale = (t) =>
       this.offsetPoint(
@@ -303,7 +306,7 @@ export class Harmonograph extends MainCanvas {
           Math.pow(Math.E, -this.d3 * t) +
           this.a4 *
             Math.sin(t * this.f4 + this.p4) *
-            Math.pow(Math.E, -this.d4 * t)
+            Math.pow(Math.E, -this.d4 * t),
       );
     this.max = Math.PI * this.params.len.value;
     this.getLineColor = this.params.lineColor.value(this.max, 0);

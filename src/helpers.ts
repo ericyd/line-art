@@ -48,7 +48,7 @@ export function valToRGBFactory(
     fixEdges = false, // show black @ nMin and white @ nMax
     returnHex = false, // return 6-digit hex value in form #000000
     returnChannels = false, // returns an array of the raw r, g, b values
-  } = {}
+  } = {},
 ) {
   return function (n) {
     if (n < nMin || n > nMax) {
