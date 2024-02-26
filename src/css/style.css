@@ -1,10 +1,10 @@
-@import 'layout';
-@import 'sidebar';
-@import 'buttons';
-@import 'controls';
+@import url('_layout.css');
+@import url('_sidebar.css');
+@import url('_buttons.css');
+@import url('_controls.css');
 
 :root {
-  --color-foreground: rgb(220, 220, 220); // #dcdcdc
+  --color-foreground: rgb(220, 220, 220); /* #dcdcdc */
   --color-background: rgb(40, 40, 40);
   --color-background-2: #161616;
   --color-background-3: #1e1e1e;
