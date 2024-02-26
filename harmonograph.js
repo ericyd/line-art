@@ -1,11 +1,41 @@
 (function () {
     'use strict';
 
+    /******************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+    /* global Reflect, Promise, SuppressedError, Symbol */
+
+    var extendStatics = function(d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+
     function __extends(d, b) {
-        for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
         function __() { this.constructor = d; }
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     }
+
+    typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
+        var e = new Error(message);
+        return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
+    };
 
     var Drawing = (function () {
         function Drawing(canvasID) {
@@ -132,10 +162,11 @@
     var Thumbnail = (function (_super) {
         __extends(Thumbnail, _super);
         function Thumbnail(canvasID, mainCanvas) {
-            _super.call(this, canvasID);
-            this.mainCanvas = mainCanvas;
-            this.canvas.addEventListener("click", this.onClick.bind(this));
-            this.values = {};
+            var _this = _super.call(this, canvasID) || this;
+            _this.mainCanvas = mainCanvas;
+            _this.canvas.addEventListener("click", _this.onClick.bind(_this));
+            _this.values = {};
+            return _this;
         }
         Thumbnail.prototype.onClick = function (e) {
             var _this = this;
@@ -166,7 +197,7 @@
     var MainCanvas = (function (_super) {
         __extends(MainCanvas, _super);
         function MainCanvas(canvasID) {
-            _super.call(this, canvasID);
+            return _super.call(this, canvasID) || this;
         }
         MainCanvas.prototype.setParams = function (params) {
             var _this = this;
@@ -182,7 +213,7 @@
     var Harmonograph = (function (_super) {
         __extends(Harmonograph, _super);
         function Harmonograph(canvasID) {
-            _super.call(this, canvasID);
+            return _super.call(this, canvasID) || this;
         }
         Harmonograph.prototype.setEquations = function () {
             var _this = this;
@@ -281,17 +312,17 @@
             var g = channel(n6th * 6 - n12th);
             var b = channel(n6th * 4 - n12th);
             if (returnHex) {
-                return "#" + toHex(r(n)) + toHex(g(n)) + toHex(b(n));
+                return "#".concat(toHex(r(n))).concat(toHex(g(n))).concat(toHex(b(n)));
             }
             if (returnChannels) {
                 return [r(n), g(n), b(n)];
             }
-            return "rgb(" + r(n) + "," + g(n) + "," + b(n) + ")";
+            return "rgb(".concat(r(n), ",").concat(g(n), ",").concat(b(n), ")");
         };
     }
     function fixedColorFactory(color) {
         return function (_, __, _a) {
-            var _b = (_a === void 0 ? {} : _a).returnChannels, returnChannels = _b === void 0 ? false : _b;
+            var _b = _a === void 0 ? {} : _a, _c = _b.returnChannels, returnChannels = _c === void 0 ? false : _c;
             return function () {
                 if (returnChannels) {
                     if (color.slice(1, 2) === "F") {
@@ -373,7 +404,7 @@
         return function () {
             var baseURL = new URL(window.location.toString());
             for (var _i = 0, _a = baseURL.searchParams; _i < _a.length; _i++) {
-                var _b = _a[_i], key = _b[0], _ = _b[1];
+                var _b = _a[_i], key = _b[0]; _b[1];
                 baseURL.searchParams.delete(key);
             }
             var params = mainCanvas.params;
@@ -441,7 +472,7 @@
             this.events = {};
             this.controls = ids.map(function (id) { return document.getElementById(id); });
             try {
-                this.controlValue = document.getElementById(param + "-value");
+                this.controlValue = document.getElementById("".concat(param, "-value"));
             }
             catch (e) {
                 this.controlValue = null;
@@ -491,43 +522,43 @@
         __extends(SliderParameter, _super);
         function SliderParameter(param, _a) {
             var _b = _a === void 0 ? {} : _a, _c = _b.min, min = _c === void 0 ? 1 : _c, _d = _b.max, max = _d === void 0 ? 10 : _d, _e = _b.step, step = _e === void 0 ? 0.1 : _e, _f = _b.transformer, transformer = _f === void 0 ? new IdentityTransformer() : _f, _g = _b.generateIntegers, generateIntegers = _g === void 0 ? false : _g, _h = _b.generate1, generate1 = _h === void 0 ? false : _h, _j = _b.animationController, animationController = _j === void 0 ? false : _j, _k = _b.animationStep, animationStep = _k === void 0 ? 0.01 : _k;
-            _super.call(this, param, [param], "number");
-            this.param = param;
-            this.max = max;
-            this.min = min;
-            this.step = step;
-            this.transformer = transformer;
-            this.generateIntegers = generateIntegers;
-            this.generate1 = generate1;
+            var _this = _super.call(this, param, [param], "number") || this;
+            _this.param = param;
+            _this.max = max;
+            _this.min = min;
+            _this.step = step;
+            _this.transformer = transformer;
+            _this.generateIntegers = generateIntegers;
+            _this.generate1 = generate1;
             if (animationController) {
                 var animationContainer = document.getElementById(animationController);
-                this.animation = {
+                _this.animation = {
                     isActive: false,
                     isIncrementing: true,
                     now: Date.now(),
                     lastRun: Date.now(),
                     fps: 1000 / 30,
-                    step: animationStep || (this.max - this.min) / 50000,
+                    step: animationStep || (_this.max - _this.min) / 50000,
                     controller: {
                         run: animationContainer.querySelector(".animation-run-toggle"),
                         direction: animationContainer.querySelector(".animation-direction-toggle"),
                         step: animationContainer.querySelector(".animation-step"),
                     },
                 };
-                this.animate = this.animate.bind(this);
-                this.animation.controller.run.addEventListener("input", this.toggleAnimation.bind(this));
-                this.animation.controller.direction.addEventListener("click", this.toggleAnimationDirection.bind(this));
-                this.animation.controller.step.addEventListener("input", throttle(this.updateAnimationStep.bind(this), 150));
-                this.animation.controller.step.setAttribute("max", this.animation.step * 50);
-                this.animation.controller.step.setAttribute("min", this.animation.step / 10);
-                this.animation.controller.step.setAttribute("step", this.animation.step);
-                this.animation.controller.step.setAttribute("value", this.animation.step);
+                _this.animate = _this.animate.bind(_this);
+                _this.animation.controller.run.addEventListener("input", _this.toggleAnimation.bind(_this));
+                _this.animation.controller.direction.addEventListener("click", _this.toggleAnimationDirection.bind(_this));
+                _this.animation.controller.step.addEventListener("input", throttle(_this.updateAnimationStep.bind(_this), 150));
+                _this.animation.controller.step.setAttribute("max", _this.animation.step * 50);
+                _this.animation.controller.step.setAttribute("min", _this.animation.step / 10);
+                _this.animation.controller.step.setAttribute("step", _this.animation.step);
+                _this.animation.controller.step.setAttribute("value", _this.animation.step);
             }
-            this.generate()
+            _this.generate()
                 .addEventListeners()
                 .setAttributes()
-                .updateDisplay(round2(this.value));
-            return this;
+                .updateDisplay(round2(_this.value));
+            return _this;
         }
         SliderParameter.prototype.setAttributes = function () {
             this.controls[0].setAttribute("step", String(this.step));
@@ -548,7 +579,8 @@
         };
         SliderParameter.prototype.generate = function () {
             if (this.generateIntegers) {
-                var rand = Math.random() * (this.transformer.maxpos - this.transformer.minpos) + this.transformer.minpos;
+                var rand = Math.random() * (this.transformer.maxpos - this.transformer.minpos) +
+                    this.transformer.minpos;
                 var generated = this.transformer.position(rand);
             }
             else if (this.generate1) {
@@ -598,21 +630,21 @@
     var OptionsParameter = (function (_super) {
         __extends(OptionsParameter, _super);
         function OptionsParameter(param, options) {
-            _super.call(this, param, options.map(function (o) { return o.id; }), "number");
-            this.param = param;
-            this.options = options;
-            this.generate()
+            var _this = _super.call(this, param, options.map(function (o) { return o.id; }), "number") || this;
+            _this.param = param;
+            _this.options = options;
+            _this.generate()
                 .addEventListeners()
                 .setAttributes()
-                .updateDisplay(this.option.display);
-            return this;
+                .updateDisplay(_this.option.display);
+            return _this;
         }
         OptionsParameter.prototype.setAttributes = function () {
             this.options.forEach(function (option, i) {
                 var el = document.getElementById(option.id);
                 el.dataset.display = option.display;
                 el.value = i;
-                var label = document.querySelector("[for=\"" + option.id + "\"");
+                var label = document.querySelector("[for=\"".concat(option.id, "\""));
                 label.innerText = option.display;
             });
             return this;
@@ -643,10 +675,10 @@
     var BooleanParameter = (function (_super) {
         __extends(BooleanParameter, _super);
         function BooleanParameter(param) {
-            _super.call(this, param, [param]);
-            this.param = param;
-            this.generate().addEventListeners().updateDisplay(this.value);
-            return this;
+            var _this = _super.call(this, param, [param]) || this;
+            _this.param = param;
+            _this.generate().addEventListeners().updateDisplay(_this.value);
+            return _this;
         }
         BooleanParameter.prototype.onInput = function (e) {
             this.rawValue = e.target.checked;
@@ -675,13 +707,13 @@
     var ColorParameter = (function (_super) {
         __extends(ColorParameter, _super);
         function ColorParameter(param) {
-            _super.call(this, param, [param]);
-            this.param = param;
-            this.generate()
+            var _this = _super.call(this, param, [param]) || this;
+            _this.param = param;
+            _this.generate()
                 .addEventListeners()
                 .setAttributes()
-                .updateDisplay(this.value);
-            return this;
+                .updateDisplay(_this.value);
+            return _this;
         }
         ColorParameter.prototype.setAttributes = function () {
             this.controls[0].setAttribute("value", this.rawValue);
@@ -702,7 +734,7 @@
         return ColorParameter;
     }(Parameter));
 
-    function polyfill () {
+    var polyfill = (function () {
         var forEachPolyfill = function (callback, thisArg) {
             thisArg = thisArg || window;
             for (var i = 0; i < this.length; i++) {
@@ -712,7 +744,7 @@
         if (window.NodeList && !NodeList.prototype.forEach) {
             NodeList.prototype.forEach = forEachPolyfill;
         }
-    }
+    });
 
     polyfill();
     (function init() {
@@ -735,9 +767,14 @@
         var dampingConfig = {
             min: 0.01,
             max: 10,
-            step: 0.001,
-            transformer: new LogSlider({ minpos: 0.01, maxpos: 10, minval: 0.01, maxval: 10 }),
-            generateIntegers: true
+            step: 0.01,
+            transformer: new LogSlider({
+                minpos: 0.01,
+                maxpos: 10,
+                minval: 0.01,
+                maxval: 10,
+            }),
+            generateIntegers: true,
         };
         var params = {
             solid: new BooleanParameter("solid"),
@@ -807,4 +844,4 @@
             .addEventListener("click", getShareURL(mainCanvas));
     })();
 
-}());
+})();

@@ -2,12 +2,12 @@
   "name": "line-art",
   "version": "1.0.0",
   "description": "Simple UI to explore the beauty of art",
-  "main": "js.js",
+  "type": "module",
+  "main": "app.js",
   "scripts": {
-    "js": "rollup -c",
     "watch": "rollup -c -w",
-    "css": "gulp",
-    "build": "npm run js && npm run css",
+    "build": "rollup -c",
+    "serve": "http-server",
     "fmt": "prettier --write \"**/**/*.ts\" "
   },
   "repository": {
@@ -22,13 +22,9 @@
   },
   "homepage": "https://github.com/ericyd/line-art#readme",
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^5.0.0",
-    "gulp-sass": "^4.0.1",
-    "rollup": "^0.62.0",
-    "rollup-plugin-typescript": "^0.8.1"
-  },
-  "dependencies": {
-    "prettier": "^2.0.4"
+    "http-server": "^14.1.1",
+    "prettier": "^3.2.5",
+    "rollup": "^4.12.0",
+    "rollup-plugin-typescript": "^1.0.1"
   }
 }
