@@ -6,6 +6,10 @@ import { round3 } from "./helpers";
 export interface Transformer {
   value: (number) => number;
   position: (number) => number;
+  minpos: number;
+  maxpos: number;
+  minlval: number;
+  maxlval: number;
 }
 
 // credit: https://stackoverflow.com/a/846249
@@ -37,6 +41,10 @@ const id = (x) => x;
 export class IdentityTransformer implements Transformer {
   value: (any) => any;
   position: (any) => any;
+  minpos: number;
+  maxpos: number;
+  minlval: number;
+  maxlval: number;
   constructor() {
     this.value = id;
     this.position = id;

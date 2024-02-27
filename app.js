@@ -354,7 +354,7 @@
     }
     function toggleNextBlock(e) {
         var listener = e.currentTarget;
-        listener.parentElement.classList.toggle("expanded");
+        listener.parentElement.classList.toggle("is-expanded");
     }
     function throttle(func, wait, options) {
         if (options === void 0) { options = {}; }
@@ -600,6 +600,7 @@
 
     var Parameter = (function () {
         function Parameter(param, ids, rawValueType) {
+            if (rawValueType === void 0) { rawValueType = 'unknown'; }
             this.param = param;
             this.rawValueType = rawValueType;
             this.events = {};
@@ -612,6 +613,12 @@
             }
             return this;
         }
+        Parameter.prototype.setAttributes = function () {
+            throw new Error('Method not implemented.');
+        };
+        Parameter.prototype.update = function (value, emit) {
+            throw new Error('Method not implemented.');
+        };
         Parameter.prototype.chance = function () {
             return Math.random() > 0.5;
         };
@@ -626,8 +633,8 @@
             this.events[eventName] = callback;
             return this;
         };
-        Parameter.prototype.emit = function (eventName, data) {
-            this.events[eventName](data);
+        Parameter.prototype.emit = function (eventName) {
+            this.events[eventName]();
             return this;
         };
         Parameter.prototype.onInput = function (e) {
@@ -778,9 +785,11 @@
                 var el = document.getElementById(option.id);
                 if (el) {
                     el.dataset.display = option.display;
-                    el.value = i;
+                    el.value = String(i);
                     var label = document.querySelector("[for=\"".concat(option.id, "\""));
-                    label.innerText = option.display;
+                    if (label) {
+                        label.textContent = option.display;
+                    }
                 }
             });
             return this;
@@ -823,6 +832,7 @@
             return this;
         };
         BooleanParameter.prototype.update = function (value, emit) {
+            if (emit === void 0) { emit = undefined; }
             this.value = Boolean(value);
             this.updateDisplay(this.value);
             if (emit) {
@@ -831,7 +841,7 @@
             return this;
         };
         BooleanParameter.prototype.updateDisplay = function (checked) {
-            this.controls[0].checked = checked;
+            this.controls[0].setAttribute('checked', checked);
             return this;
         };
         BooleanParameter.prototype.generate = function () {

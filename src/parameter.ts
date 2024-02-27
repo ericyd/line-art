@@ -18,12 +18,10 @@ export class Parameter {
   controlValue: any;
   value: any;
   rawValue: any;
-  update: (value: string, emit?: boolean) => Parameter;
-  setAttributes: () => Parameter;
   constructor(
     public param: string,
     ids,
-    public rawValueType: any,
+    public rawValueType: string = 'unknown',
   ) {
     this.events = {};
     this.controls = ids.map((id) => document.getElementById(id));
@@ -33,6 +31,14 @@ export class Parameter {
       this.controlValue = null;
     }
     return this;
+  }
+
+  setAttributes(): Parameter {
+    throw new Error('Method not implemented.');
+  };
+
+  update(value: string, emit?: boolean): Parameter {
+    throw new Error('Method not implemented.');
   }
 
   chance() {
@@ -51,8 +57,8 @@ export class Parameter {
     return this;
   }
 
-  emit(eventName, data) {
-    this.events[eventName](data);
+  emit(eventName) {
+    this.events[eventName]();
     return this;
   }
 
@@ -240,14 +246,13 @@ export class SliderParameter extends Parameter {
   }
 }
 
+type OptionsParameterOption = {id: string, value: Function, display: string}
 export class OptionsParameter extends Parameter {
-  /**
-   * @param {string} param
-   * @param {{id: string, value: function, display: string}[]} options
-   */
+  options: OptionsParameterOption[];
+  option: OptionsParameterOption;
   constructor(
     public param: string,
-    options,
+    options: OptionsParameterOption[],
   ) {
     super(
       param,
@@ -267,9 +272,11 @@ export class OptionsParameter extends Parameter {
       const el = <HTMLInputElement>document.getElementById(option.id);
       if (el) {
         el.dataset.display = option.display;
-        el.value = i;
+        el.value = String(i);
         const label = document.querySelector(`[for="${option.id}"`);
-        label.innerText = option.display;
+        if (label) {
+          label.textContent = option.display;
+        }
       }
     });
     return this;
@@ -313,7 +320,7 @@ export class BooleanParameter extends Parameter {
     return this;
   }
 
-  update(value, emit) {
+  update(value, emit = undefined) {
     this.value = Boolean(value);
     this.updateDisplay(this.value);
     if (emit) {
@@ -323,7 +330,7 @@ export class BooleanParameter extends Parameter {
   }
 
   updateDisplay(checked) {
-    this.controls[0].checked = checked;
+    this.controls[0].setAttribute('checked', checked);
     return this;
   }
 
