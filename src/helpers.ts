@@ -124,7 +124,8 @@ export function refresh(params, mainCanvas) {
 
 export function toggleSidebar(e) {
   document.getElementById("sidebar")?.classList.toggle("collapsed");
-  document.getElementById("sidebar")?.classList.toggle("expanded");
+  // bug 4
+  document.getElementById("sidebar")?.classList.toggle("is-expanded");
 }
 
 export function toggleNextBlock(e) {

@@ -320,7 +320,8 @@ export class BooleanParameter extends Parameter {
     return this;
   }
 
-  update(value, emit = undefined) {
+  // bug 3
+  update(value, emit = true) {
     this.value = Boolean(value);
     this.updateDisplay(this.value);
     if (emit) {

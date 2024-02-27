@@ -31,3 +31,5 @@ git add .
 git commit -m "built at $(date +date +%Y-%M-%dT%H-%m-%s)"
 git push
 ```
+
+https://github.com/ericyd/line-art/compare/debugging...solutions

@@ -171,7 +171,8 @@ class Drawing {
           this.params.oscillatorX.value(t * this.params.yModDepth.value),
       );
     this.max = Math.PI * this.params.len.value;
-    this.getLineColor = this.params.lineColor.value(25, 0);
+    // bug 5
+    this.getLineColor = this.params.lineColor.value(this.max, 0);
     // pixelColor is used when drawing with imageData because individual channels are required
     // could consider refactoring the factory to return channels by default and then transform as needed
     this.getPixelColor = this.params.lineColor.value(this.max, 0, {
