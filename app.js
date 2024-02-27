@@ -354,7 +354,7 @@
     }
     function toggleNextBlock(e) {
         var listener = e.currentTarget;
-        listener.parentElement.classList.toggle("is-expanded");
+        listener.parentElement.classList.toggle("expanded");
     }
     function throttle(func, wait, options) {
         if (options === void 0) { options = {}; }
