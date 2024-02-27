@@ -313,7 +313,7 @@ export class BooleanParameter extends Parameter {
     return this;
   }
 
-  update(value, emit = true) {
+  update(value, emit) {
     this.value = Boolean(value);
     this.updateDisplay(this.value);
     if (emit) {

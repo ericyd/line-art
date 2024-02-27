@@ -823,7 +823,6 @@
             return this;
         };
         BooleanParameter.prototype.update = function (value, emit) {
-            if (emit === void 0) { emit = true; }
             this.value = Boolean(value);
             this.updateDisplay(this.value);
             if (emit) {
