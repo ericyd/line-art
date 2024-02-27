@@ -63,7 +63,7 @@ polyfill();
       step: 0.001,
       transformer: new LogSlider(),
       generateIntegers: true,
-      animationController: "yModDepth-animate",
+      animationController: "ymoddepth-animate",
       animationStep: 1 / 10000,
     }),
     lineColor: new OptionsParameter("lineColor", lineColors),
