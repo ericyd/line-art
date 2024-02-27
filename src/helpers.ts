@@ -50,10 +50,8 @@ export function valToRGBFactory(
     returnChannels = false, // returns an array of the raw r, g, b values
   } = {},
 ) {
-  return function (n) {
-    if (n < nMin || n > nMax) {
-      throw new Error("n must satisfy " + nMin + " <= n <= " + nMax);
-    }
+  return function (input) {
+    const n = Math.min(nMax, Math.max(nMin, input));
     if (fixEdges) {
       if (n == nMax) {
         return "#FFFFFF";
@@ -125,8 +123,8 @@ export function refresh(params, mainCanvas) {
 }
 
 export function toggleSidebar(e) {
-  document.getElementById("sidebar").classList.toggle("collapsed");
-  document.getElementById("sidebar").classList.toggle("expanded");
+  document.getElementById("sidebar")?.classList.toggle("collapsed");
+  document.getElementById("sidebar")?.classList.toggle("expanded");
 }
 
 export function toggleNextBlock(e) {

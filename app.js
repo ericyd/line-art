@@ -149,7 +149,7 @@
                     _this.params.oscillatorX.value(t * _this.params.yModDepth.value));
             };
             this.max = Math.PI * this.params.len.value;
-            this.getLineColor = this.params.lineColor.value(this.max, 0);
+            this.getLineColor = this.params.lineColor.value(25, 0);
             this.getPixelColor = this.params.lineColor.value(this.max, 0, {
                 returnChannels: true,
             });
@@ -285,10 +285,8 @@
         if (nMax === void 0) { nMax = 100; }
         if (nMin === void 0) { nMin = 0; }
         var _b = _a === void 0 ? {} : _a, _c = _b.fixEdges, fixEdges = _c === void 0 ? false : _c, _d = _b.returnHex, returnHex = _d === void 0 ? false : _d, _e = _b.returnChannels, returnChannels = _e === void 0 ? false : _e;
-        return function (n) {
-            if (n < nMin || n > nMax) {
-                throw new Error("n must satisfy " + nMin + " <= n <= " + nMax);
-            }
+        return function (input) {
+            var n = Math.min(nMax, Math.max(nMin, input));
             if (fixEdges) {
                 if (n == nMax) {
                     return "#FFFFFF";
@@ -349,8 +347,9 @@
         };
     }
     function toggleSidebar(e) {
-        document.getElementById("sidebar").classList.toggle("collapsed");
-        document.getElementById("sidebar").classList.toggle("expanded");
+        var _a, _b;
+        (_a = document.getElementById("sidebar")) === null || _a === void 0 ? void 0 : _a.classList.toggle("collapsed");
+        (_b = document.getElementById("sidebar")) === null || _b === void 0 ? void 0 : _b.classList.toggle("expanded");
     }
     function toggleNextBlock(e) {
         var listener = e.currentTarget;
@@ -894,6 +893,7 @@
 
     polyfill();
     (function init() {
+        var _a, _b, _c, _d, _e, _f, _g;
         var mainCanvasID = "mainCanvas";
         var params = {
             solid: new BooleanParameter("solid"),
@@ -946,34 +946,31 @@
             .setParams(params)
             .setEquations()
             .draw();
-        document.getElementById("mainCanvasControls").classList.remove("hide");
+        (_a = document.getElementById("mainCanvasControls")) === null || _a === void 0 ? void 0 : _a.classList.remove("hide");
         loadParams(mainCanvas);
         mainCanvas.setParams(params).update();
         var refreshParams = refresh(params, mainCanvas);
-        document.getElementById("refresh").addEventListener("click", refreshParams);
+        (_b = document.getElementById("refresh")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", refreshParams);
         document.querySelectorAll(".toggler").forEach(function (el) {
             el.addEventListener("click", toggleNextBlock);
         });
-        document
-            .getElementById("close-sidebar")
-            .addEventListener("click", toggleSidebar);
-        document
-            .getElementById("open-sidebar")
-            .addEventListener("click", toggleSidebar);
+        (_c = document
+            .getElementById("close-sidebar")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", toggleSidebar);
+        (_d = document
+            .getElementById("open-sidebar")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", toggleSidebar);
         document.getElementById("downloadBtn");
-        document.getElementById("downloadBtn").addEventListener("click", function (e) {
+        (_e = document.getElementById("downloadBtn")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", function (e) {
             download(e, "mainCanvas");
         });
-        document.getElementById("downloadBtnHiRes").addEventListener("click", function (e) {
+        (_f = document.getElementById("downloadBtnHiRes")) === null || _f === void 0 ? void 0 : _f.addEventListener("click", function (e) {
             new Thumbnail("downloadCanvas", mainCanvas)
                 .setParams(params, false)
                 .setEquations()
                 .draw();
             download(e, "downloadCanvas");
         });
-        document
-            .getElementById("shareBtn")
-            .addEventListener("click", getShareURL(mainCanvas));
+        (_g = document
+            .getElementById("shareBtn")) === null || _g === void 0 ? void 0 : _g.addEventListener("click", getShareURL(mainCanvas));
     })();
 
 })();

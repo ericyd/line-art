@@ -79,13 +79,13 @@ polyfill();
     .setParams(params)
     .setEquations()
     .draw();
-  document.getElementById("mainCanvasControls").classList.remove("hide");
+  document.getElementById("mainCanvasControls")?.classList.remove("hide");
   loadParams(mainCanvas);
   mainCanvas.setParams(params).update();
 
   // generate thumbnails
   var refreshParams = refresh(params, mainCanvas);
-  document.getElementById("refresh").addEventListener("click", refreshParams);
+  document.getElementById("refresh")?.addEventListener("click", refreshParams);
 
   // add toggle functionality
   document.querySelectorAll(".toggler").forEach(function (el) {
@@ -94,17 +94,17 @@ polyfill();
 
   document
     .getElementById("close-sidebar")
-    .addEventListener("click", toggleSidebar);
+    ?.addEventListener("click", toggleSidebar);
   document
     .getElementById("open-sidebar")
-    .addEventListener("click", toggleSidebar);
+    ?.addEventListener("click", toggleSidebar);
 
   // enable downloading image
   const downloader = document.getElementById("downloadBtn");
-  document.getElementById("downloadBtn").addEventListener("click", (e) => {
+  document.getElementById("downloadBtn")?.addEventListener("click", (e) => {
     download(e, "mainCanvas");
   });
-  document.getElementById("downloadBtnHiRes").addEventListener("click", (e) => {
+  document.getElementById("downloadBtnHiRes")?.addEventListener("click", (e) => {
     new Thumbnail("downloadCanvas", mainCanvas)
       .setParams(params, false)
       .setEquations()
@@ -114,5 +114,5 @@ polyfill();
 
   document
     .getElementById("shareBtn")
-    .addEventListener("click", getShareURL(mainCanvas));
+    ?.addEventListener("click", getShareURL(mainCanvas));
 })();

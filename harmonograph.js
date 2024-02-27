@@ -149,7 +149,7 @@
                     _this.params.oscillatorX.value(t * _this.params.yModDepth.value));
             };
             this.max = Math.PI * this.params.len.value;
-            this.getLineColor = this.params.lineColor.value(this.max, 0);
+            this.getLineColor = this.params.lineColor.value(25, 0);
             this.getPixelColor = this.params.lineColor.value(this.max, 0, {
                 returnChannels: true,
             });
@@ -285,10 +285,8 @@
         if (nMax === void 0) { nMax = 100; }
         if (nMin === void 0) { nMin = 0; }
         var _b = _a === void 0 ? {} : _a, _c = _b.fixEdges, fixEdges = _c === void 0 ? false : _c, _d = _b.returnHex, returnHex = _d === void 0 ? false : _d, _e = _b.returnChannels, returnChannels = _e === void 0 ? false : _e;
-        return function (n) {
-            if (n < nMin || n > nMax) {
-                throw new Error("n must satisfy " + nMin + " <= n <= " + nMax);
-            }
+        return function (input) {
+            var n = Math.min(nMax, Math.max(nMin, input));
             if (fixEdges) {
                 if (n == nMax) {
                     return "#FFFFFF";

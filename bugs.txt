@@ -2,5 +2,4 @@
 2. X Modulator does not update modulator function
 3. Solid checkbox doesn't change line from dotted to Solid
 4. Collapsing the sections changes the arrow but doesn't collapse the sections
-5. (TODO) Maybe introduce a weird bug in the colorRgb function
-  - maybe something like it's supposed to be reversed direction, or maybe it doesn't scale to the line length?
+5. Color doesn't scale with line length; short lines look rainbow colored, but very long lines have too much red
