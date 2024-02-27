@@ -1,1 +1,2 @@
 1. Y Modulator does not animate
+2. X Modulator does not update modulator function

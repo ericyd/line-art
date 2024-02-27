@@ -41,7 +41,7 @@ export class Parameter {
 
   addEventListeners() {
     this.controls.forEach((control) => {
-      control.addEventListener("input", throttle(this.onInput.bind(this), 125));
+      control?.addEventListener("input", throttle(this.onInput.bind(this), 125));
     });
     return this;
   }
@@ -265,10 +265,12 @@ export class OptionsParameter extends Parameter {
   setAttributes() {
     this.options.forEach((option, i) => {
       const el = <HTMLInputElement>document.getElementById(option.id);
-      el.dataset.display = option.display;
-      el.value = i;
-      const label = document.querySelector(`[for="${option.id}"`);
-      label.innerText = option.display;
+      if (el) {
+        el.dataset.display = option.display;
+        el.value = i;
+        const label = document.querySelector(`[for="${option.id}"`);
+        label.innerText = option.display;
+      }
     });
     return this;
   }
@@ -284,7 +286,7 @@ export class OptionsParameter extends Parameter {
   }
 
   updateDisplay(value) {
-    document.getElementById(this.option.id).checked = "checked";
+    document.getElementById(this.option?.id)?.setAttribute('checked', "checked");
     this.controlValue.innerText = value;
     return this;
   }

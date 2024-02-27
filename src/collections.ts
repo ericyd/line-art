@@ -25,28 +25,28 @@ const oldOscillators = [
 // values must be functions that return a number
 export const oscillatorsX: Array<Oscillator> = [
   {
-    id: "osc0",
+    id: "oscillator0",
     value: (t) => Math.sin(t),
     display: "sine",
   },
   {
-    id: "osc1",
+    id: "oscillator1",
     value: (t) => Math.cos(t),
     display: "cosine",
   },
   {
-    id: "osc2",
+    id: "oscillator2",
     value: (t) => (Math.sin(t) + 1) / 2,
     display: "half-sine",
   },
   {
-    id: "osc3",
+    id: "oscillator3",
     value: (t) => Math.sin(t) * Math.pow(t, -0.35),
     display: "collapse",
   },
   {
     // based on https://en.wikipedia.org/wiki/Trochoid
-    id: "osc4",
+    id: "oscillator4",
     value: (t) => {
       var a = 0.5;
       var b = 0.5;
@@ -55,7 +55,7 @@ export const oscillatorsX: Array<Oscillator> = [
     display: "trochoid",
   },
   {
-    id: "osc5",
+    id: "oscillator5",
     // based on: https://en.wikipedia.org/wiki/Epicycloid
     value: (t) => {
       var r = 0.2;
@@ -68,17 +68,17 @@ export const oscillatorsX: Array<Oscillator> = [
     display: "epicycloid",
   },
   {
-    id: "osc6",
+    id: "oscillator6",
     value: (t) => Math.sin(Math.cos(Math.log10(t))),
     display: "log periodic",
   },
   {
-    id: "osc7",
+    id: "oscillator7",
     value: (t) => Math.abs(Math.sin(t / 10)),
     display: "absolute",
   },
   {
-    id: "osc8",
+    id: "oscillator8",
     value: (t) => {
       var start = Math.sin(t);
       if (start > 0.5) {

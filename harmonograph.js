@@ -485,7 +485,7 @@
         Parameter.prototype.addEventListeners = function () {
             var _this = this;
             this.controls.forEach(function (control) {
-                control.addEventListener("input", throttle(_this.onInput.bind(_this), 125));
+                control === null || control === void 0 ? void 0 : control.addEventListener("input", throttle(_this.onInput.bind(_this), 125));
             });
             return this;
         };
@@ -521,7 +521,8 @@
     var SliderParameter = (function (_super) {
         __extends(SliderParameter, _super);
         function SliderParameter(param, _a) {
-            var _b = _a === void 0 ? {} : _a, _c = _b.min, min = _c === void 0 ? 1 : _c, _d = _b.max, max = _d === void 0 ? 10 : _d, _e = _b.step, step = _e === void 0 ? 0.1 : _e, _f = _b.transformer, transformer = _f === void 0 ? new IdentityTransformer() : _f, _g = _b.generateIntegers, generateIntegers = _g === void 0 ? false : _g, _h = _b.generate1, generate1 = _h === void 0 ? false : _h, _j = _b.animationController, animationController = _j === void 0 ? false : _j, _k = _b.animationStep, animationStep = _k === void 0 ? 0.01 : _k;
+            var _b = _a === void 0 ? {} : _a, _c = _b.min, min = _c === void 0 ? 1 : _c, _d = _b.max, max = _d === void 0 ? 10 : _d, _e = _b.step, step = _e === void 0 ? 0.1 : _e, _f = _b.transformer, transformer = _f === void 0 ? new IdentityTransformer() : _f, _g = _b.generateIntegers, generateIntegers = _g === void 0 ? false : _g, _h = _b.generate1, generate1 = _h === void 0 ? false : _h, _j = _b.animationController, animationController = _j === void 0 ? '' : _j, _k = _b.animationStep, animationStep = _k === void 0 ? 0.01 : _k;
+            var _l, _m, _o, _p, _q, _r, _s;
             var _this = _super.call(this, param, [param], "number") || this;
             _this.param = param;
             _this.max = max;
@@ -530,7 +531,7 @@
             _this.transformer = transformer;
             _this.generateIntegers = generateIntegers;
             _this.generate1 = generate1;
-            if (animationController) {
+            if (animationController !== '') {
                 var animationContainer = document.getElementById(animationController);
                 _this.animation = {
                     isActive: false,
@@ -540,19 +541,19 @@
                     fps: 1000 / 30,
                     step: animationStep || (_this.max - _this.min) / 50000,
                     controller: {
-                        run: animationContainer.querySelector(".animation-run-toggle"),
-                        direction: animationContainer.querySelector(".animation-direction-toggle"),
-                        step: animationContainer.querySelector(".animation-step"),
+                        run: animationContainer === null || animationContainer === void 0 ? void 0 : animationContainer.querySelector(".animation-run-toggle"),
+                        direction: animationContainer === null || animationContainer === void 0 ? void 0 : animationContainer.querySelector(".animation-direction-toggle"),
+                        step: animationContainer === null || animationContainer === void 0 ? void 0 : animationContainer.querySelector(".animation-step"),
                     },
                 };
                 _this.animate = _this.animate.bind(_this);
-                _this.animation.controller.run.addEventListener("input", _this.toggleAnimation.bind(_this));
-                _this.animation.controller.direction.addEventListener("click", _this.toggleAnimationDirection.bind(_this));
-                _this.animation.controller.step.addEventListener("input", throttle(_this.updateAnimationStep.bind(_this), 150));
-                _this.animation.controller.step.setAttribute("max", _this.animation.step * 50);
-                _this.animation.controller.step.setAttribute("min", _this.animation.step / 10);
-                _this.animation.controller.step.setAttribute("step", _this.animation.step);
-                _this.animation.controller.step.setAttribute("value", _this.animation.step);
+                (_l = _this.animation.controller.run) === null || _l === void 0 ? void 0 : _l.addEventListener("input", _this.toggleAnimation.bind(_this));
+                (_m = _this.animation.controller.direction) === null || _m === void 0 ? void 0 : _m.addEventListener("click", _this.toggleAnimationDirection.bind(_this));
+                (_o = _this.animation.controller.step) === null || _o === void 0 ? void 0 : _o.addEventListener("input", throttle(_this.updateAnimationStep.bind(_this), 150));
+                (_p = _this.animation.controller.step) === null || _p === void 0 ? void 0 : _p.setAttribute("max", _this.animation.step * 50);
+                (_q = _this.animation.controller.step) === null || _q === void 0 ? void 0 : _q.setAttribute("min", _this.animation.step / 10);
+                (_r = _this.animation.controller.step) === null || _r === void 0 ? void 0 : _r.setAttribute("step", _this.animation.step);
+                (_s = _this.animation.controller.step) === null || _s === void 0 ? void 0 : _s.setAttribute("value", _this.animation.step);
             }
             _this.generate()
                 .addEventListeners()
@@ -642,10 +643,12 @@
         OptionsParameter.prototype.setAttributes = function () {
             this.options.forEach(function (option, i) {
                 var el = document.getElementById(option.id);
-                el.dataset.display = option.display;
-                el.value = i;
-                var label = document.querySelector("[for=\"".concat(option.id, "\""));
-                label.innerText = option.display;
+                if (el) {
+                    el.dataset.display = option.display;
+                    el.value = i;
+                    var label = document.querySelector("[for=\"".concat(option.id, "\""));
+                    label.innerText = option.display;
+                }
             });
             return this;
         };
@@ -660,7 +663,8 @@
             return this;
         };
         OptionsParameter.prototype.updateDisplay = function (value) {
-            document.getElementById(this.option.id).checked = "checked";
+            var _a, _b;
+            (_b = document.getElementById((_a = this.option) === null || _a === void 0 ? void 0 : _a.id)) === null || _b === void 0 ? void 0 : _b.setAttribute('checked', "checked");
             this.controlValue.innerText = value;
             return this;
         };
