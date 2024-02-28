@@ -1,7 +1,7 @@
-@import url('_layout.css');
-@import url('_sidebar.css');
-@import url('_buttons.css');
-@import url('_controls.css');
+@import url('./layout.css');
+@import url('./sidebar.css');
+@import url('./buttons.css');
+@import url('./controls.css');
 
 :root {
   --color-foreground: rgb(220, 220, 220); /* #dcdcdc */
