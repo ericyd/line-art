@@ -1,5 +1,0 @@
-1. Y Modulator does not animate
-2. X Modulator does not update modulator function
-3. Solid checkbox doesn't change line from dotted to Solid
-4. Collapsing the sections changes the arrow but doesn't collapse the sections
-5. Color doesn't scale with line length; short lines look rainbow colored, but very long lines have too much red
